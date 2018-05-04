@@ -1,0 +1,2 @@
+#### To ignore .html files in my repository to show it for what it really is: Jupyter Notebook
+*.html linguist-vendored
