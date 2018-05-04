@@ -30,13 +30,17 @@ After that command a tab in your browser will pop up with all the notebook on it
 
 ## Projects' Index
 
+>**Recommendations:** 
+Check the **European Soccer** notebook (uses a SQLite DB, Pandas, 2D and 3D plots)
+If you want to brush up basic SQL queries, check the **SQL Appendix**
+
 1. [Temperature Trends per Year](./TemperatureTrends/Temperature_Trends.ipynb)
 2. [Bike Sharing](./BikeSharing/Bike_Share_Analysis.ipynb)
-3. [European Soccer](./SoccerTeamsAnalysis/European_Soccer.ipynb)
+3. **[European Soccer](./SoccerTeamsAnalysis/European_Soccer.ipynb)**
 4. [AB Test for a Web Page Release](./ABTest/AB_test.ipynb)
 
 ## Appendix
 
 1. [Basic SQL queries and examples](./SQL_Appendix)
-2. [Web Crawler (python scripts)](./WebCrawler)
+2. [Wikipedia Web Crawler (python scripts - Comming Soon)](./WebCrawler)
 
