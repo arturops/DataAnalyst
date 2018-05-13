@@ -11787,7 +11787,8 @@ div#notebook {
     <li><a href="#stats_test">Statistical Test</a></li>
         <ul>
            <li><a href='#bootstrapping'>Boostrapping</a></li>
-           <li><a href='#t-test'>T-test</a></li>
+           <li><a href='#paired_t-test'>Two-sample Paired t-test</a></li>
+           <li><a href='#one-sample_t-test'>One-sample t-test</a></li>
         </ul>
     </ul>
 <li><a href="#conclusions">Conclusions</a></li>
@@ -11863,7 +11864,9 @@ Shown words are colored, but this time the color of words does not match the wor
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a id="hypothesis"></a></p>
 <h2 id="Hypothesis">Hypothesis<a class="anchor-link" href="#Hypothesis">&#182;</a></h2><p>Once we identified our independent and dependent variables, we want to make a hypothesis on the outcome of our dependent variables which is the result of our test. Thus, we can ask: What is an appropriate set of hypotheses for this task?</p>
-<p>For a Stroop test, the reaction time is our tests' result and dependent variable. In fact, that is what we are interested in comparing and the purpose of having 2 scenarios on the test. We want to look at the reaction time of people in both scenarios and make conclusions on participants' reactions. Therefore, we will compare the reaction time of <strong>Congruent</strong> and <strong>Incongruent</strong> scenarios. Since we need a sample size to run to make a hypothesis test, we will need to consider the average of our times congruent and incongruent to be our parameters for the test.</p>
+<p>For a Stroop test, the reaction time is our tests' result and dependent variable. In fact, that is what we are interested in comparing and the purpose of having 2 scenarios on the test. We want to look at the reaction time of people in both scenarios and make conclusions on participants' reactions. Therefore, we will compare the reaction time of <strong>Congruent</strong> and <strong>Incongruent</strong> scenarios. Since we need a sample size to run to make a hypothesis test, we will need to consider the average of our congruent's and incongruent's time to be our parameters for the test. Moreover, we know that the same participant did a congruent and incongruent test, thus these two times are related. A comparison between such times lead us to define we need to do a <strong>paired t-test (two-sample paired t-test)</strong> to compare the congruent mean and incongruent mean.[3]</p>
+<blockquote><p><strong>Note:</strong> If the a two-sample paired t-test gives the same result of a one-sample t-test if the substract group A's mean - group B's mean and we assume their difference is center in 0. This is another approach to the hypothesis test, so it is important to keep in mind.</p>
+</blockquote>
 <p>For the hypothesis, the traditional thinking believes that the participants' reaction time is the same or maybe even slower when they have congruent words. However, we want to challenge that idea by saying that we believe the participants' have a faster reaction time when color and words match (congruent) than when color and words do not match (incongruent). Thus, we can stablish a hypothesis as follow:</p>
 
 </div>
@@ -11875,7 +11878,11 @@ Shown words are colored, but this time the color of words does not match the wor
 <div class="text_cell_render border-box-sizing rendered_html">
 $$H_0: \mu_0 \geq \mu_1$$$$H_1: \mu_0 &lt; \mu_1$$<p>where $\mu_0$ is the mean of the time it took people on the sample to read <strong>congruent</strong> words (labels consistent with color)</p>
 <p>and $\mu_1$ is the mean of the time it took people on the sample to read <strong>incongruent</strong> words (labels differ from color)</p>
-<p>The main purpose of our hypothesis becomes to answer if we can have enough information to say that <em>our participants' are faster reacting to congruent words than incongruent words.</em></p>
+<p>In other words, our hypotheses are:</p>
+<ul>
+<li><strong>Null hypothesis</strong> ($H_0$). The reaction time of participants when reading congruent words is equal or greater than when they read incongruent words.</li>
+<li><strong>Alternative hypothesis</strong> ($H_1$). The reaction time of participants when reading congruent words is faster then when reading incongruent words.</li>
+</ul>
 
 </div>
 </div>
@@ -13014,6 +13021,8 @@ Incongruent Std: 2.8259
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can see that the spread (standard deviation) decreased in both groups, which is a good indication that we effectively removed the outliers. The incongruent group in particular got a mean and median almost similar indicating a normal distribution. Moreover, the standard deviation is now smaller than the congruent group which is what we expected to see. However, the congruent group now has a median and mean that are not as close as before. Here we sacrificed the separation in median and mean to gain a tighter distribution by reducing our standard deviation when we removed the congruent outlier.</p>
 <p>All in all, we now have a clean dataset which has two distributions closed to normal. This is good enough for us to move onto a hypothesis testing.</p>
+<blockquote><p><strong>Note:</strong> Since our dataset is small and this is pyschological test, it is expected to have a large variance. Thus, it is possible to do the analysis with the outliers. In this case, we decided to drop them, but the results won't be affected much if we keep them.</p>
+</blockquote>
 
 </div>
 </div>
@@ -13023,9 +13032,12 @@ Incongruent Std: 2.8259
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a id="stats_test"></a></p>
-<h3 id="Statistical-Test">Statistical Test<a class="anchor-link" href="#Statistical-Test">&#182;</a></h3><p>For the purpose of testing using simulation (bootstrapping) we will use math to express our hypothesis from :</p>
-$$H_0: \mu_0 \geq \mu_1$$$$H_1: \mu_0 &lt; \mu_1$$<p>to its equivalent:</p>
-$$H_0: \mu_0 - \mu_1 \geq 0$$$$H_1: \mu_0 - \mu_1 &lt; 0$$<p>Given that we already know our distributions are fairly close to normal, we are ready to use the mean as our statistic to perform our hypothesis test.</p>
+<h3 id="Statistical-Test">Statistical Test<a class="anchor-link" href="#Statistical-Test">&#182;</a></h3><p>For the purpose of the hypothesis testing, we have two options to do the test. The first one is :</p>
+$$H_0: \mu_0 \geq \mu_1$$$$H_1: \mu_0 &lt; \mu_1$$<p>in this option we need to use a <strong>two-sample paired t-test</strong> (compare two groups that are related, same participant took both tests: congruent and incongruent) . On the second option, we can use some math to transform our original hypotheis to its equivalent:</p>
+$$H_0: \mu_0 - \mu_1 \geq 0$$$$H_1: \mu_0 - \mu_1 &lt; 0$$<p>for this other expression of our hypothesis, we need to use a <strong>one-sample t-test</strong> or we can use <strong>bootstrapping</strong> to run a hypothesis test.</p>
+<blockquote><p><strong>Note:</strong> The two-sample paired t-test would first substract the two means and perform an one-sample t-test, so if we want to do a one-sample test we need the substracted samples and the assumption that our mean is centered in 0.</p>
+</blockquote>
+<p>Given that we already know our distributions are fairly close to normal, we are ready to use the mean as our statistic to perform our hypothesis test.</p>
 <p>The first thing we do is define our desired confidence interval and as a result the type I error threshold ($\alpha$). In this case, we want to have a high confidence interval as this a test to understand our human reaction time in this Stroop test. Thus, we choose an interval of 99.5%, resulting in $\alpha = 0.005$.</p>
 
 </div>
@@ -13070,12 +13082,13 @@ Type I error threshold (alpha) is 0.0050
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>There are two options to perform the hypothesis test:</p>
+<p>There are three options to perform the hypothesis test:</p>
 <ul>
-<li><strong>Bootstrapping</strong>. We simulate the null distribution/population and use our sample statistic to find the p-value.</li>
-<li><strong>T-test</strong>. We need a one-tail test(defined by our hypothesis), for this test we will use our sample dataset as T-test use the sample to approximate population's prediction. This was one of the most used tests before computers as a small sample size could be used for bigger estimations.</li>
+<li><strong>Bootstrapping</strong>. We simulate the null distribution/population and use our sample statistic to find the p-value (uses hypothesis $\mu_0 - \mu_1 \geq 0$).</li>
+<li><strong>Two-sample paired t-test</strong>. We need a one-tail test (defined by our hypothesis $\mu_0 \geq \mu_1$). For this test we will use our sample dataset, the t-test uses the sample to approximate population's predictions. This was one of the most used tests before computers as a small sample size could be used for bigger estimations.</li>
+<li><strong>One-sample t-test</strong>. Instead of using the data for each congruent and incongruent group, we will need to use the difference of congruent-incongruent, and assume our mean is 0 (uses hypothesis $\mu_0 - \mu_1 \geq 0$).</li>
 </ul>
-<p>In this notebook, we perform both approaches to prove that both of them work and result in similar conclusions.</p>
+<p>In this notebook, we perform these approaches to prove that they all work and result in similar conclusions.</p>
 <p><a id='bootstrapping'></a></p>
 <h4 id="Bootstrapping">Bootstrapping<a class="anchor-link" href="#Bootstrapping">&#182;</a></h4><p>The first thing we do for bootstrapping is to calculate our sample mean.</p>
 <p>In this case, our sample mean is $\mu_0 - \mu_1$</p>
@@ -13120,10 +13133,9 @@ Type I error threshold (alpha) is 0.0050
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then, we sample with replace our dataset a large number of times. For every sample we do, we obtain the mean of each group and the difference of their means.</p>
-<blockquote><p><strong>Note:</strong> Doing the sampling is a powerful concept as it intercepts with central limit theorem which says that the distribution of the sample mean is normal.</p>
+<p>After we have our sample mean, we need to generate all the samples 'congruent - incongruent' time to be able to sample from them and allow bootstrapping to generate the desired distribution.</p>
+<blockquote><p><strong>Note:</strong> Since congruent and incongruent time are related variables, it is better for bootstrapping to sample from $\mu_0 - \mu_1$ than to sample $\mu_0$ and $\mu_1$ and compute their difference.</p>
 </blockquote>
-<p>In this case, we will use 10,000 sample means of size 5 each.</p>
 
 </div>
 </div>
@@ -13133,31 +13145,118 @@ Type I error threshold (alpha) is 0.0050
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span>
+<span class="n">df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[12]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Congruent</th>
+      <th>Incongruent</th>
+      <th>Diff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>12.079</td>
+      <td>19.278</td>
+      <td>-7.199</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>16.791</td>
+      <td>18.741</td>
+      <td>-1.950</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>9.564</td>
+      <td>21.214</td>
+      <td>-11.650</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>8.630</td>
+      <td>15.687</td>
+      <td>-7.057</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>14.669</td>
+      <td>22.803</td>
+      <td>-8.134</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Then, we sample with replace our $\mu_0 - \mu_1$ dataset a large number of times. For every sample we do, we obtain the mean of each group and the difference of their means.</p>
+<blockquote><p><strong>Note:</strong> Doing the sampling is a powerful concept as it intercepts with central limit theorem which says that the distribution of the sample mean is normal.</p>
+</blockquote>
+<p>In this case, we will use 10,000 sample means of size 5 each.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Using bootstraping</span>
 <span class="n">RESAMPLE</span> <span class="o">=</span> <span class="mi">10000</span>
 
-<span class="n">congruent</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">incongruent</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">diff</span> <span class="o">=</span> <span class="p">[]</span>
 
+<span class="c1"># bootstrapping our difference in congruent-incongruent</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">RESAMPLE</span><span class="p">):</span>
-    <span class="n">sample_set</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">c_mean</span> <span class="o">=</span> <span class="n">sample_set</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">congruent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_mean</span><span class="p">)</span>
-    <span class="n">i_mean</span> <span class="o">=</span> <span class="n">sample_set</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">incongruent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i_mean</span><span class="p">)</span>
-    <span class="n">diff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_mean</span> <span class="o">-</span> <span class="n">i_mean</span><span class="p">)</span>
+    <span class="n">diff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 
-    
-<span class="n">congruent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">congruent</span><span class="p">)</span>
-<span class="n">incongruent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">incongruent</span><span class="p">)</span>
+<span class="c1"># converting our samples to numpy array    </span>
 <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Congruent mean: </span><span class="si">{:.4f}</span><span class="s1"> Congruent median: </span><span class="si">{:.4f}</span><span class="s1"> Congruent std: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span>
-      <span class="nb">format</span><span class="p">(</span><span class="n">congruent</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">congruent</span><span class="p">),</span> <span class="n">congruent</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Incongruent mean: </span><span class="si">{:.4f}</span><span class="s1"> Incongruent median: </span><span class="si">{:.4f}</span><span class="s1"> Incongruent std: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span>
-      <span class="nb">format</span><span class="p">(</span><span class="n">incongruent</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">incongruent</span><span class="p">),</span> <span class="n">incongruent</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Diff mean: </span><span class="si">{:.4f}</span><span class="s1"> Diff median: </span><span class="si">{:.4f}</span><span class="s1"> Diff std: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span>
       <span class="nb">format</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="n">diff</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span> 
@@ -13177,11 +13276,8 @@ Type I error threshold (alpha) is 0.0050
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Congruent mean: 13.5118 Congruent median: 13.5001 Congruent std: 1.3558
-
-Incongruent mean: 20.6792 Incongruent median: 20.6473 Incongruent std: 1.2436
-
-Diff mean: -7.1674 Diff median: -7.1907 Diff std: 1.4489
+<pre>
+Diff mean: -7.1652 Diff median: -7.1848 Diff std: 1.4334
 </pre>
 </div>
 </div>
@@ -13194,35 +13290,24 @@ Diff mean: -7.1674 Diff median: -7.1907 Diff std: 1.4489
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After the bootstrapping, we can see that the mean for each bootstrapped statistic is very close to the sample.</p>
-<p>The next step is to visualize our results from bootstrapping using histograms.</p>
+<p>After the bootstrapping, we can see that the mean for the bootstrapped statistic is very close to the sample.</p>
+<p>The next step is to visualize our results from bootstrapping using a histogram.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Histograms of simulated bootstraped groups</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">congruent</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Congruent&#39;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">incongruent</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Incongruent&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dataset Congruent mean&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dataset Incongruent mean&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histograms of Bootstraped Groups&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-
-<span class="c1"># Histograms of simulated bootstraped groups means difference</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Means Differences Dist&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Histograms of simulated bootstraped groups means difference</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Samples Differences Mean Dist&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">u_diff</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dataset Difference in means&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histograms of Bootstraped Difference in Means&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histograms of Bootstraped $x_0 - x_1$ (difference mean of samples)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 
@@ -13242,482 +13327,224 @@ Diff mean: -7.1674 Diff median: -7.1907 Diff std: 1.4489
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-kSNHmDZtGhdffHGBnzM9PZ3XX38dgFdeeSVqufr167N9+3a+/fZbDh48yLvvvgvA6aefTuPGjXnt
-tdeAIIFesWJFgdeM9tlORO/evRk/fnzuek5yv2vXLs455xwg6Gddmii5FjmFRXsYUg9EipQzS184
-9lXO7d+/P3covssuu4zevXvz2GOPAXDnnXcyefJk0tPTWbt2bW6rbtu2balYsSLJycmMHTs2arm5
-c+eSkpJCu3bteP3117nnnnuoW7cukyZNYtCgQbRt25b09PTchwGHDh3K5ZdfftwDjQCPP/44devW
-pWXLlrRu3Zp+/fpRt25dGjRowO9+9zt69uxJcnIy7du355prrinwM48bN44xY8aQlpbG1q1bc7tN
-5FepUiUeffRROnXqRN++fWnevHnuvilTpvDcc8+RnJxMq1ateOuttyKeI0f+OiuKp59+mqVLl9K2
-bVtatmzJs88+C8CDDz7Ir371K7p27Rr3UU5OlsXadF8apaam+tKlGg5byr6iJLs3pR87++KURSd2
-Ds3eKFLGnEhS3HHIsetLnj92PbXk5mlbs2YNLVq0KLHrl1f79u2jWrVqmBmvvPIK06ZNKzQ5Ls8i
-3admtszdUws7Vn2uRURERE5xy5YtY9iwYbg7tWvX5vnnny/8ICkSJdciElFBrelq9RYRKVu6detW
-aB9piQ8l1yLFQH2cRUREygc90CgiIiIiEidKrkVERERE4kTdQkTKKXVVERERiT+1XIuIiJQm+cek
-1tjUcZeUlJQ7znVycjJjxow5ZlbCSDIzM5k6dWrcYxk3bhz79u2LuK9Hjx6cykMOZ2RkMHPmzJIO
-I+6UXIuIiEi5Uq1aNTIyMli1ahWzZs1i5syZjBo1qsBjSiK5Lm3iPY24kmsRERE5NURrHS/OFnKz
-xL5iVK9ePSZMmMD48eNxdzIzM+nWrRvt27enffv2fPzxxwA89NBDzJ8/n5SUFMaOHRu13NatW+ne
-vTspKSm0bt2a+fPnA/D+++/TuXNn2rdvz4ABA9i7dy9PP/00W7ZsoWfPnhFnaMyrRo0aPPzwwyQn
-J5Oens62bdsA2LZtG9deey3JyckkJyfnxjFmzBhat25N69atGTduHBD8gdCiRQtuv/12WrVqRe/e
-vdm/fz8AS5YsoW3btnTu3JkHHniA1q1bA8HU4gMGDOCqq66id+/ezJ07l759++bGNWzYsNzpx5ct
-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
-AAAAAElFTkSuQmCC
-"
->
-</div>
-
-</div>
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-J5/M7bffzrXXXsvzzz9Pbm4uu3btirtviJ5gffPNN3Pqqacye/ZsPvjgA84880xOOukk+vXrx+rV
-qwG49NJL+fnPf84pp5zCsccey5w5c0riuuOOO+jWrRvdu3cvSZbL206sRx55hHHjxlW6/WIFBQV0
-7tyZMWPGcOKJJzJq1CgWLFhA37596dixI2+99RYAO3bsYPTo0eTl5dGjRw+eeeaZkvXjfV75+fkM
-GDCAESNG0LlzZ0aNGoW7l3zmXbp0IScnh/Hjx1f4+VRHSm9oNLMCYBtQBOx1915m1hyYBbQHCoAf
-ufuXFhW43AucDewELnX3JamMT0RERA5exx57LPv27eOzzz6jVatWzJ8/n+zsbNasWcPIkSNZtGgR
-t912G3fddRfPPvssADt37ozb7rHHHmPIkCFMmjSJoqIidu7cyeeff85vf/tbFixYQJMmTbj99tu5
-++67ufHGG7n77rt5+eWXadGiRaVxZmVl0b17d1avXk337t1L5s+bN4+mTZuybNkyAI488kgWLVrE
-1KlTK9w3RMPJLVy4EIDTTz+dBx54gI4dO/L3v/+dK6+8kpdeegmI/mhYuHAhq1evZtiwYYwYMYK/
-/OUvPP300/z973/nkEMO4YsvvgBg7Nix5W6nPPG2X9batWuZPXs206ZNIy8vj8cee4yFCxcyb948
-br31Vp5++mluueUWTjvtNB5++GE2b95M7969GTRoULmfK8DSpUtZuXIlrVu3pm/fvrz++ut06dKF
-p556itWrV2NmpcpxkqUmRgsZ6O6fx0xPBF5099vMbGKY/hVwFtAxvE4Gfhd+ioiIiFRLcW/lnj17
-GDduHMuWLSMrK4v3338/bvvy2uXl5TF69Gj27NnDueeeS25uLq+88grvvfceffv2BeDrr7/mu9/9
-7gHFmag333yzwn1fcMEFAGzfvp033niD888/v2TZV199VfL+3HPPpV69enTp0oVPP/0UgAULFnDZ
-ZZdxyCGHANC8efNKt1OeeNsvq0OHDnTr1g2Arl27cvrpp2NmdOvWjYKCAiD6hmDevHncddddQDQ6
-zbp162jdunW5n2vv3r1p27YtALm5uRQUFNCnTx+ys7MZM2YM55xzDkOHDq30GKoqHUPxDQcGhPfT
-gXyi5Ho48KhHV9ebZna4mR3l7p+kIUYRERHJcB9++CFZWVm0atWKm266iSOPPJLly5ezb98+srOz
-464zZcqUuO369+/Pq6++ynPPPcdFF13EhAkT+Na3vsUZZ5zB448/fkBxFhUV8c4773DCCSckvI67
-V7jvJk2aALBv3z4OP/zwkt7vsho1alRqm8U/y46YUdl2yhNv+xW1qVevXsl0vXr12Lt3b8m6c+fO
-pVOnTqXWnTx5crmfa+x2s7Ky2Lt3L/Xr1+ett97ixRdf5IknnmDq1KmV9r5XVaqTawdeMDMHHnT3
-acCRxQmzu39iZq1C2zbA+ph1C8M8JdciIiIZYoAPSHcIAGzcuJGf/OQnjBs3DjNjy5YttG3blnr1
-6jF9+vSSG/2aNWvGtm3bStYrr93HH39MmzZtuOKKK9ixYwdLlixh0qRJXHXVVaxdu5bjjjuOnTt3
-UlhYyPHHH1+y3crKQvbs2cOkSZNo164dOTk5CR9fnz59yt13rEMPPZQOHTowe/Zszj//fNydFStW
-lCo/KWvw4MHcfPPN/PjHPy4pC2nevHmVt5NMQ4YM4f777+f+++/HzFi6dCk9evQo9/Mqz/bt29m5
-cydnn302ffr04bjjjkt6rKm+obGvu/ckKvm4ysz6V9A23qCC+/2JY2ZjzWyRmS06kAG+RURE5OCy
-a9eukqH4Bg0axODBg/nNb34DwJVXXsn06dPp06cP77//fknPbk5ODvXr16d79+5MmTKl3Hb5+fnk
-5ubSo0cP5s6dy9VXX03Lli155JFHGDlyJDk5OfTp06fkJr+xY8dy1llnlXtD46hRo8jJyeHEE09k
-x44dJTfoJaqifZc1c+ZMHnroIbp3707Xrl0r3deZZ57JsGHD6NWrF7m5uSWlGFXdTjLdcMMN7Nmz
-p+Sc3XDDDUD5n2t5tm3bxtChQ8nJyeF73/seU6ZMSXqsVtUan2rvyGwysB24AhgQeq2PAvLdvZOZ
-PRjePx7a/6O4XXnb7NWrlxcXrYuIHDTKPIExv83KUtMD/tm1dHs9oVFqgVWrVlWprEGkNot3PZvZ
-YnfvVdm6Keu5NrMmZtas+D0wGHgXmAdcEppdAhT/2TMPuNgifYAtqrcWERERkUySyprrI4GnQkF8
-feAxd/8/M3sbeNLMLgfWAcW3nT5PNAzfWqKh+C5LYWwiIiIiIkmXsuTa3T8E9qtyd/dNwOlx5jtw
-VariERGRYEMV71dR2YmISML0hEYRERERkSRJxzjXIiKZS72+IiJSAfVci4iIiIgkiZJrEREROSiY
-GRdddFHJ9N69e2nZsmVKHnFdmUceeYSWLVvSo0cPOnbsyJAhQ3jjjTdKlt94440sWLAAgNdee42u
-XbuSm5vLrl27mDBhAl27dmXChAk1HveBGDBgAJ06dSInJ4fOnTszbtw4Nm/eXLL8lFNOqXD9W2+9
-NdUh1giVhYhI3VbVMo/atn2R2irZ134CJVZNmjTh3XffZdeuXTRu3Jj58+fTpk2b5MZRBRdccAFT
-p04F4OWXX+aHP/whL7/8MieccAI333xzSbuZM2cyfvx4LrssGijtwQcfZOPGjaUe312R4sd61wYz
-Z86kV69efP3111x33XUMHz6cV155BaDUHxfx3HrrrVx//fU1EWZKqedaRGq3DRur9hKROu2ss87i
-ueeeA+Dxxx9n5MiRJct27NjB6NGjycvLo0ePHiVPGCwoKKBfv3707NmTnj17liSB+fn5DBgwgBEj
-RtC5c2dGjRpF8cP3Jk6cSJcuXcjJyWH8+PGVxjVw4EDGjh3LtGnTALj00kuZM2cOf/jDH3jyySe5
-+eabGTVqFMOGDWPHjh2cfPLJzJo1i40bN3LeeeeRl5dHXl4er7/+OgCTJ09m7NixDB48mIsvvpii
-oiImTJhAXl4eOTk5PPjgg5Uew9tvv80pp5xC9+7d6d27N9u2bSt3O5988gn9+/cnNzeXE088kdde
-e63C423YsCF33HEH69atY/ny5QA0bdq03G1NnDix5Ambo0aNqvR81ma1488cERERkSS48MILufnm
-mxk6dCgrVqxg9OjRJYngLbfcwmmnncbDDz/M5s2b6d27N4MGDaJVq1bMnz+f7Oxs1qxZw8iRIyl+
-AvTSpUtZuXIlrVu3pm/fvrz++ut06dKFp556itWrV2NmpUofKtKzZ8+SZLXYmDFjWLhwIUOHDmXE
-iBFAlIQuW7YMgB//+Mf84he/4NRTT2XdunUMGTKEVatWAbB48WIWLlxI48aNmTZtGocddhhvv/02
-X331FX379mXw4MHlHkPv3r254IILmDVrFnl5eWzdupXGjRvz0EMPxd3On//8Z4YMGcKkSZMoKipi
-586dlR5vVlYW3bt3Z/Xq1XTv/s3ozI899th+2+rXrx9Tp04tOe5MpuRaREREDho5OTkUFBTw+OOP
-c/bZZ5da9sILLzBv3jzuuusuAHbv3s26deto3bo148aNY9myZWRlZfH++++XrNO7d2/atm0LQG5u
-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
+<img src="data:image/png;base64,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
+iy/YYYcdTKzV6kQEO+yww0Z9amNyLUmS1mNirdZqY9/7JteSJElSiZhcS5KkZqdt27ZUVlbSp08f
++vXrx3XXXcfatWvr3Gbu3LncddddJY/l+uuvZ/ny5XnXDR06lD333JOKigp69+7N6NGj+fzzz6vX
+H3jggdXTY8aMoU+fPowZM4ZFixax//77079/f5599tmSx1wKkyZN4qqrrmrqMFocv9AoSa3NgkUN
+K9+13qf9SiXXoUMHZs6cCcDHH3/MKaecwuLFi/nVr35VcJuq5PqUU04paSzXX3893/nOd9hyyy3z
+rr/zzjsZOHAgK1eu5JJLLuHYY4/l6aefBuCFF16oLnfzzTezaNEitthiCyZOnEjv3r2ZMGFC0XGs
+WbOGtm3bbtzJNMCIESMYMWJEox1vU2HLtSRJymtKTCnrq1g77rgj48eP58YbbySlxNy5cznkkEMY
+MGAAAwYMqE5gL774Yp599lkqKysZO3ZswXILFy5kyJAhVFZWss8++1S3HD/22GMccMABDBgwgBNP
+PJGlS5cybtw4FixYwKGHHsqhhx5aZ5zt2rXj6quv5sMPP+S1114DoGPHjkAuUV22bBn7778/v/71
+r/nJT37Co48+SmVlJStWrMh7bIAePXpw+eWXc/DBB3Pffffx3nvvcdRRR7HvvvtyyCGH8M477wBw
+xhln8MMf/pADDzyQ3Xbbjfvvv786rquvvpq+ffvSr18/Lr74YoCC+6np9ttvZ/To0fXuv8rcuXPp
+3bs355xzDvvssw+nnnoqkydP5qCDDqJXr15MnToVgGXLlnHWWWcxaNAg+vfvz8MPP1y9fb76mjJl
+CkOHDuWEE06gd+/enHrqqaSUqut87733pqKigosuuqjO+mkstlxLkqRmb7fddmPt2rV8/PHH7Ljj
+jjz++OO0b9+e2bNnc/LJJzN9+nSuuuoqrr32Wh555BEAli9fnrfcXXfdxfDhw7n00ktZs2YNy5cv
+55NPPuGKK65g8uTJbLXVVvz617/muuuu4xe/+AXXXXcdTz31FJ07d643zrZt29KvXz/eeecd+vXr
+V7180qRJdOzYsbo1fqeddmL69OnceOONdR4bcuMuP/fccwAcfvjh3HTTTfTq1YuXX36Z888/nyef
+fBLI/dPw3HPP8c477zBixAhOOOEE/vznP/PQQw/x8ssvs+WWW/LZZ58BMGrUqIL7KSTf/mubM2cO
+9913H+PHj2fQoEHcddddPPfcc0yaNIl//dd/5aGHHuLKK6/ksMMO47bbbuPzzz9nv/3244gjjihY
+rwCvvvoqb775Jl27duWggw7i+eefZ++99+bBBx/knXfeISLW6Y7TlEyuJUlSi1DVWrlq1SpGjx7N
+zJkzadu2Le+++27e8oXKDRo0iLPOOotVq1Zx3HHHUVlZydNPP81bb73FQQcdBMDKlSs54IADNirO
+Yr300kt1HnvkyJEALF26lBdeeIETTzyxet2XX35ZPX3cccfRpk0b9t57bz766CMAJk+ezJlnnlnd
+pWX77bevdz+F5Nt/bT179qRv374A9OnTh8MPP5yIoG/fvsydOxfIfUIwadIkrr32WiA39OOHH35I
+165dC9brfvvtR7du3QCorKxk7ty5DB48mPbt23POOefwjW98g2OOOabec2gMJteSJKnZe//992nb
+ti077rgjv/rVr9hpp5147bXXWLt2Le3bt8+7zdixY/OWGzJkCM888wx/+tOf+O53v8uYMWPYbrvt
+OPLII7n77rs3Ks41a9bw+uuvs9deexW9TUqpzmNvtdVWAKxdu5ZOnTpVt37XtsUWW6yzz6qftYeW
+q28/heTbf11l2rRpUz3fpk0bVq9eXb3tAw88wJ577rnOtpdddlnBeq2537Zt27J69Wo222wzpk6d
+yhNPPMHEiRO58cYb6219bwwm15JUTg398iD4BUI1G0PT0KYOAYBFixZx3nnnMXr0aCKCxYsX061b
+N9q0acOECRNYs2YNAFtvvTVLliyp3q5QuQ8++IBddtmFc889l2XLlvHKK69w6aWXcsEFFzBnzhx2
+3313li9fzvz589ljjz2q91tft5BVq1Zx6aWX0r17dyoqKoo+v8GDBxc8dk3bbLMNPXv25L777uPE
+E08kpcSsWbPW6X5S27Bhw7j88ss55ZRTqruFbL/99g3eTykNHz6cG264gRtuuIGI4NVXX6V///4F
+66uQpUuXsnz5co4++mgGDx7M7rvv3ijx18cvNEqSpGZnxYoV1UPxHXHEEQwbNoxf/vKXAJx//vlM
+mDCBwYMH8+6771a37FZUVLDZZpvRr18/xo4dW7DclClTqKyspH///jzwwANceOGFdOnShdtvv52T
+Tz6ZiooKBg8eXP0lv1GjRvH1r3+94BcaTz31VCoqKthnn31YtmxZ9Rf0ilXXsWu78847ufXWW+nX
+rx99+vSp91hHHXUUI0aMYODAgVRWVlZ3xWjofkrp5z//OatWraq+Zj//+c+BwvVayJIlSzjmmGOo
+qKjga1/7GmPHjm2M8OsVDe0X1JwMHDgwVXV0l6RmqYwt17VHWyi6ldGh+FSPt99+u0HdGqRNTb57
+ICJmpJQG1retLdeSJElSiZhcS5IkSSVici1JkiSViKOFSNKmYkP6d0uSSqqsLdcRMTciXo+ImREx
+PVu2fUQ8HhGzs5/bZcsjIsZFxJyImBURA8oZmyRJklRqjdEt5NCUUmWNb1deDDyRUuoFPJHNA3wd
+6JW9RgG/a4TYJEmSpJJpij7XxwITsukJwHE1lt+Rcl4COkXEzk0QnyRJqmnBotK+inDllVfSp08f
+KioqqKys5OWXXy7rKQ4dOpSNHd739ttvp0uXLvTv359evXoxfPhwXnjhher1v/jFL5g8eTIAzz77
+LH369KGyspIVK1YwZswY+vTpw5gxYzYqhsY2dOhQdt1113We2HjcccfRsWPHsh63Idc6n4ceeoi3
+3nqrLLGVu891Ah6LiATcnFIaD+yUUloIkFJaGBE7ZmV3AebV2HZ+tmxhzR1GxChyLdvsuuuuZQ5f
+0ibPMZ+lZufFF1/kkUce4ZVXXmGLLbbgk08+YeXKlU0dVlFGjhzJjTfeCMBTTz3F8ccfz1NPPcVe
+e+3F5ZdfXl3uzjvv5KKLLuLMM88E4Oabb2bRokXrPOa7LlWP/24OOnXqxPPPP8/BBx/M559/zsKF
+C+vfqASKvdb5PPTQQxxzzDHsvffeJY+r3C3XB6WUBpDr8nFBRAypo2zkWbbeE25SSuNTSgNTSgO7
+dPGPnCRJm5qFCxfSuXPn6kSzc+fOdO3aFYDLL7+cQYMGsc8++zBq1KjqFtOhQ4fy4x//mCFDhrDX
+Xnsxbdo0jj/+eHr16sXPfvYzAObOnUvv3r05/fTTqaio4IQTTmD58uXrHf+xxx7jgAMOYMCAAZx4
+4oksXboUgIsvvpi9996biooKLrroonrP49BDD2XUqFGMHz8egDPOOIP777+f3//+99x7771cfvnl
+nHrqqYwYMYJly5ax//77c88997Bo0SK+/e1vM2jQIAYNGsTzzz8PwGWXXcaoUaMYNmwYp512GmvW
+rGHMmDEMGjSIiooKbr75ZiD3BMqhQ4dywgkn0Lt3b0499dTq6zRt2jQOPPBA+vXrx3777ceSJUsK
+7mfhwoUMGTKEyspK9tlnH5599tm853nSSScxceJEAP74xz9y/PHHr7P+mmuuqd531VM2IdfCve++
++9KnT5/qawTQsWNHLr30Uvr168fgwYP56KOPNvhaw/r19sILLzBp0iTGjBlDZWUl7733Xr37b4iy
+JtcppQXZz4+BB4H9gI+quntkPz/Ois8HutfYvBuwoJzxSVKzVMKP1qWWaNiwYcybN4899tiD888/
+n6effrp63ejRo5k2bRpvvPEGK1as4JFHHqle165dO5555hnOO+88jj32WP7t3/6NN954g9tvv51P
+P/0UgL/85S+MGjWKWbNmsc022/Db3/52nWN/8sknXHHFFUyePJlXXnmFgQMHct111/HZZ5/x4IMP
+8uabbzJr1qzqhL0+AwYMWO9R5ueccw4jRozgmmuu4c4772TSpEl06NCBmTNnMnLkSC688EJ+/OMf
+M23aNB544AHOOeec6m1nzJjBww8/zF133cWtt97Ktttuy7Rp05g2bRq33HILf/3rXwF49dVXuf76
+63nrrbd4//33ef7551m5ciUjR47kN7/5Da+99hqTJ0+mQ4cOBfdz1113MXz4cGbOnMlrr71GZWVl
+3nM8/PDDeeaZZ1izZg0TJ05k5MiR1esee+wxZs+ezdSpU5k5cyYzZszgmWeeAeC2225jxowZTJ8+
+nXHjxlXX0bJlyxg8eDCvvfYaQ4YM4ZZbbtnga52v3g488MDq6z9z5ky++tWvFrX/YpXt84SI2Apo
+k1Jakk0PAy4HJgGnA1dlP6seZj8JGB0RE4H9gcVV3UckqdkwqZXKrmPHjsyYMYNnn32Wp556ipEj
+R3LVVVdxxhln8NRTT3H11VezfPlyPvvsM/r06cM3v/lNAEaMGAFA37596dOnDzvvnPvq1m677ca8
+efPo1KkT3bt356CDDgLgO9/5DuPGjVunFfqll17irbfeqi6zcuVKDjjgALbZZhvat2/POeecwze+
+8Q2OOeaYos6lZl/kYk2ePHmd/sD/+Mc/WLJkSfU5dujQAcglrrNmzapuoV28eDGzZ8+mXbt27Lff
+fnTr1g2AyspK5s6dy7bbbsvOO+/MoEGDANhmm23q3M+gQYM466yzWLVqFccdd1zB5Lpt27YcfPDB
+3HPPPaxYsYIePXpUr3vsscd47LHH6N+/PwBLly5l9uzZDBkyhHHjxvHggw8CMG/ePGbPns0OO+xA
+u3btqq/vvvvuy+OPP17Udct3rTe03jZGOTvr7AQ8GBFVx7krpfT/ImIacG9EnA18CJyYlX8UOBqY
+AywHzixjbJIkqRlr27YtQ4cOZejQofTt25cJEyZw0kkncf755zN9+nS6d+/OZZddxhdffFG9TVU3
+kjZt2qzTd7lNmzasXr0agCwvqVZ7PqXEkUceyd13371eTFOnTuWJJ55g4sSJ3HjjjTz55JP1nser
+r77KXnvtVfyJA2vXruXFF1+sTqJr2mqrrdaJ9YYbbmD48OHrlJkyZco659+2bVtWr15NSmm9861r
+PwDPPPMMf/rTn/jud7/LmDFjOO200/LGfNJJJ/Gtb32Lyy67bL19X3LJJXzve99bL8bJkyfz4osv
+suWWWzJ06NDqutx8882r46yKvRj5rvVmm222QfW2McrWLSSl9H5KqV/26pNSujJb/mlK6fCUUq/s
+52fZ8pRSuiCl9NWUUt+U0sZ9ZVeSJLVIf/nLX5g9e3b1/MyZM/nKV75SnXx17tyZpUuXVre0NsSH
+H37Iiy++CMDdd9/NwQcfvM76wYMH8/zzzzNnzhwAli9fzrvvvsvSpUtZvHgxRx99NNdffz0zZ86s
+91hPP/0048eP59xzz21QjMOGDav+oh5Q8FjDhw/nd7/7HatWrQLg3XffZdmyZQX327t3bxYsWMC0
+adMAWLJkCatXry64nw8++IAdd9yRc889l7PPPptXXnml4L4POeQQLrnkEk4++eT1Yrztttuq+63/
+7W9/4+OPP2bx4sVst912bLnllrzzzju89NJLRVyZwgpd60L1tvXWW1d/GlBqzeNrppIkqflq5FFy
+li5dyg9+8AM+//xzNttsM3bffXfGjx9Pp06dOPfcc+nbty89evSo7t7QEHvttRcTJkzge9/7Hr16
+9eL73//+Ouu7dOnC7bffzsknn8yXX34JwBVXXMHWW2/NscceyxdffEFKibFjx+bd/z333MNzzz3H
+8uXL6dmzJw888ECDW67HjRvHBRdcQEVFBatXr2bIkCHcdNNN65U755xzmDt3LgMGDCClRJcuXXjo
+oYcK7rddu3bcc889/OAHP2DFihV06NCByZMnF9zPlClTuOaaa9h8883p2LEjd9xxR8F9R0TeL3kO
+GzaMt99+mwMOOADIdfn5j//4D4466ihuuukmKioq2HPPPRk8eHCDrhEUd62XLFmSt95OOukkzj33
+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
 "
 >
 </div>
@@ -13732,7 +13559,7 @@ Ikmi5FpEREREJEmUXIuIiIiIJMn/BxvxexrL4ktbAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Once we visualized our bootstrapped distributions with the dataset means displayed on them, we can say that the bootstrapped distributions are representative of our dataset. Using this idea, we are able to obtain the standard deviation of our bootstrapped difference in means to simulate the null distribution centered in 0 and using the same number of samples the bootstrapped used.</p>
+<p>Once we visualized our bootstrapped distribution with the dataset mean displayed on it, we can say that the bootstrapped distribution is representative of our dataset. Using this idea, we are able to obtain the standard deviation of our bootstrapped difference samples' mean to simulate the null distribution centered in 0 and using the same number of samples the bootstrapped used.</p>
 <p>Then, we will plot the distribution of our null distribution and overlap the boostrapped difference in means and the dataset difference in means. The latter is the one we are ultimately interested.</p>
 
 </div>
@@ -13740,7 +13567,7 @@ Ikmi5FpEREREJEmUXIuIiIiIJMn/BxvxexrL4ktbAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Simulating the null distribution</span>
@@ -13754,7 +13581,7 @@ Ikmi5FpEREREJEmUXIuIiIiIJMn/BxvxexrL4ktbAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Histogram of simulated normal null distribution</span>
@@ -13785,234 +13612,231 @@ Ikmi5FpEREREJEmUXIuIiIiIJMn/BxvxexrL4ktbAAAAAElFTkSuQmCC
 
 <div class="output_png output_subarea ">
 <img src="data:image/png;base64,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
-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
-//33GTp0aF27Rx99NO3ataNnz551veYNncPWrJpjrncF5gG/iIgaYBpwNrDd8oQ5M+dGxPKfgh2A
-1+qtP6coWyG5jogzgDMAdtrJP7iSJLU2L730Eu3bt6dr165ceOGFbLfddjzxxBN89NFHdOrUqcF1
-LrnkkgbrHXjggTzwwAPceeedfOELX2DUqFFsvfXWHHroofzyl79co7jW9RZsmclPfvKTFZJJKA0L
-2WyzzVaoN2LECH7wgx+s0kaHDh3q4mjfvj1Lly5d7fYaa6cx5ba/8cYbA9CuXbsV1mnXrh1Lly4l
-M9lrr7146KGHVln3pJNO4vbbb6empoZrr72WyZMnr9Lu8vih4XN44oknlr1P65tqjrneCOgLjM3M
-vYGFlIaBNKahn+hcpSBzXGb2z8z+Xbp0qUykkiSpWcybN48zzzyTs846i4hg/vz5bL/99rRr147r
-r7++bszwFltswXvvvVe3XmP1XnnlFbp27crpp5/OqaeeymOPPcbgwYP505/+xAsvvADABx98UNfT
-vXK7y/Xo0YOXX36ZF198EWCNE3OAoUOHMnbs2Loxyc899xwLFy5cpd6QIUOYOHEib775JgDvvPMO
-r7zyymrbHjJkCGPHjgVKvcQLFixYq3YqZY899mDevHl1yfWSJUuYNWsWAO+99x7bb789S5Ys4cYb
-b2yyrYbOYWtWzeR6DjAnMx8u5idSSrbfiIjtAYr3N+vV37He+t2A16sYnyRJagYffvhh3a34PvWp
-T3HYYYdx/vnnA/Af//EfjB8/nsGDB/Pcc8/V9fD26dOHjTbaiJqaGi655JJG602ePJna2lr23ntv
-brnlFs4++2y6dOnCtddey/HHH0+fPn0YPHgwzzzzDABnnHEGhx9++CoXNHbq1Ilx48ZxxBFHsP/+
-+7Pzzjuv8X6edtpp9OzZk759+9KrVy+++MUvNtgz3LNnT773ve9x2GGH0adPHw499NC6iwEb8+Mf
-/5j777+f3r17069fP2bNmrVW7VRKx44dmThxIl//+tepqamhtra27iLL7373uwwaNIhDDz2UHj16
-NNlWQ+ewNYvlXfJVaTxiCqULGp+NiAuA5d+JvJ2ZYyJiNPCxzDw3Io4AzqJ0YeMg4LLMHLi69vv3
-75/Lr36ttgjIep3rsVKnehUPoyS1GmtyK75yOeZ63Tz99NPsueeeLR2G1Ko09HsTEdMys39T61b7
-PtdfAW6MiI7AS8DJlHrLfx0RpwKvAscWde+ilFi/AHxQ1JUkSZJajaom15k5HWgowx/SQN0EvlzN
-eCRJkqRq8vHnkiRJUoWYXEuSJEkVYnItSZIkVYjJtSRJklQhJteSJKmq2rdvT21tLTU1NfTt27fu
-fshravbs2UyYMGG1dd59910uv/zytWq/Wg4++GCaunXw5MmT6x5LPmnSJMaMGQOUHrozaNAg9t57
-b6ZMmcLNN9/Mnnvuucp9utcnp512Gk899VRLh9FiTK4lSVJVbbLJJkyfPp0nnniCH/zgB3zjG99Y
-q3bWNble/lTH9d1RRx3F6NGlh1rfe++99OjRg8cff5wDDjiAq6++mssvv5z777+/rLZaYp+vuuoq
-evbs2ezbXV+YXEuSpGazYMECtt56awAyk1GjRtGrVy969+7NTTfdtNry0aNHM2XKFGpra7nkkkuY
-NWsWAwcOpLa2lj59+vD8888zevRoXnzxRWpraxk1ahSTJ0/mkEMOYfjw4fTu3RuAo48+mn79+rHX
-Xnsxbty4utg233xzvvrVr9K3b1+GDBnCvHnzgFLP8znnnMO+++5Lr169eOSRRwBYuHAhp5xyCgMG
-DGDvvffmjjvuAEpPpPz85z9Pnz59OO644/jwww8bPBa///3v6dGjB/vvvz+33nprXfm1117LWWed
-xfTp0zn33HO56667qK2t5cILL+TBBx/kzDPPZNSoUSxbtoxRo0YxYMAA+vTpwxVXXAHQ4D7fcMMN
-dcfqi1/8Yl3Svfnmm3PeeedRU1PD4MGDeeONNwB44403OOaYY6ipqaGmpqbu24bG2qmvfk99Y+3X
-d8EFFzBixAgOO+wwunfvzq233sq5555L7969GTZsWN3j5KdNm8ZBBx1Ev379GDp0aN3TKK+88koG
-DBhATU0Nn/vc5/jggw8AOOmkkxg5ciT77rsvu+66KxMnTgRg7ty5HHjggdTW1tKrVy+mTJnS4PlZ
-WybXkiS1FRHVe63G8sef9+jRg9NOO41vf/vbANx66611Pdp/+MMfGDVqFHPnzm20fMyYMRxwwAFM
-nz6d//zP/+TnP/85Z599NtOnT+fRRx+lW7dujBkzht12243p06dz0UUXAfDII4/w/e9/v26owjXX
-XMO0adN49NFHueyyy3j77beBUrLct29fHnvsMQ466CAuvPDCun1YuHAhf/7zn7n88ss55ZRTAPj+
-97/PJz/5SaZOncr999/PqFGjWLhwIWPHjmXTTTdlxowZnHfeeUybNm2VY7Jo0SJOP/10fvOb3zBl
-yhT+9re/rVKntraW73znOxx33HFMnz6d888/n/79+3PjjTdy0UUXcfXVV9O5c2emTp3K1KlTufLK
-K3n55ZdX2eenn36am266iT/96U9Mnz6d9u3bc+ONN9bt1+DBg3niiSc48MADufLKKwEYOXIkBx10
-EE888QSPPfYYe+2112rbaUxj7a/sxRdf5M477+SOO+7ghBNO4JBDDuHJJ59kk0024c4772TJkiV8
-5StfYeLEiUybNo1TTjmF8847D4DPfvazTJ06lSeeeII999yTq6++uq7duXPn8uCDD/Lb3/627tuA
-CRMmMHTo0Lqfsdra2tXuw5qq9hMaJUlSG7d8WAjAQw89xIknnsjMmTN58MEHOf7442nfvj3bbbcd
-Bx10EFOnTm20fMstt1yh3X322Yfvf//7zJkzh89+9rPsvvvuDW5/4MCB7LLLLnXzl112GbfddhsA
-r732Gs8//zzbbLMN7dq147jjjgPghBNO4LOf/WzdOscffzwABx54IAsWLODdd9/l7rvvZtKkSVx8
-8cVAKWF+9dVXeeCBBxg5ciQAffr0oU+fPqvE9Mwzz7DLLrvUxXzCCSes0ItejrvvvpsZM2bU9cjO
-nz+f559/no4dO66wz/feey/Tpk1jwIABQOnDTteuXQHo2LFj3Vjvfv36cc899wBw3333cd111wGl
-MfOdO3fm+uuvb7SdxjTW/soOP/xwOnToQO/evVm2bBnDhg0DoHfv3syePZtnn32WmTNncuihhwKl
-4S7bb789ADNnzuRb3/oW7777Lu+//z5Dhw6ta/foo4+mXbt29OzZs67XfMCAAZxyyiksWbKEo48+
-2uRakiS1Xvvssw9vvfUW8+bNo/Rw5lU1Vr6y4cOHM2jQIO68806GDh3KVVddxa677rpKvc0226xu
-evLkyfzhD3/goYceYtNNN+Xggw9m0aJFDbYf9XrkY6Xe+YggM7nlllvYY489VrtuY8qpszqZyU9+
-8pMVkkko7WP9fc5MRowYwQ9+8INV2ujQoUNdHO3bt2fp0qWr3V5j7TSm3PY33nhjANq1a7fCOu3a
-tWPp0qVkJnvttRcPPfTQKuuedNJJ3H777dTU1HDttdcyefLkVdpdHj+UPiA98MAD3HnnnXzhC19g
-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
-Cvn/RHe9P3SO4dMAAAAASUVORK5CYII=
+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
+cj169OiKxnL++edz9NFHs9FGG5W9z2GHHcZhhx0GwN13303v3r258srSrMIjR47koosuKju5Xr58
+OZ07d17zwNfBZZdd1qLH6+iq/RAZSZKket27d2fSpEn89Kc/JTOZO3cu++yzDwMGDGDAgAH86U9/
+AmD8+PFMmzaN2tpaJk6c2GS9+fPns++++1JbW0vfvn2ZNm0aAHfccQd77LEHAwYM4Mgjj+Sdd97h
+wgsv5JVXXuGAAw5oNBn+/e9/T+/evdl777256aab6suvuOIKTj31VGbOnMkZZ5zB7bffTm1tLeec
+cw73338/p5xyCuPGjWP58uWMGzeOwYMH079/fy655BKg1At+wAEHMHr0aPr16wfANddcw5AhQ6it
+reVLX/oSy5cvB2CTTTbhzDPPpKamhmHDhvHqq68C8Oqrr3L44YdTU1NDTU1N/fk31U5D+++/Pw8/
+/HCz7Td09tlnM2bMGA466CB69erFTTfdxBlnnEG/fv0YOXIkS5cuBWDGjBnst99+DBw4kBEjRjB/
+fulWuUsvvZTBgwdTU1PDZz7zmfpvCo499ljGjh3LnnvuyY477sjkyZObvYbtVma229fAgQOzpZQ+
+KepfDRazflCLJCkzM6/984tlvVR9K/9/Ve1XYzbeeONVyjbbbLP829/+losXL8733nsvMzOffvrp
+rPu//d57781DDjmkvn5T9c4777z8wQ9+kJmZy5Yty0WLFuWCBQtyn332yXfeeSczMydMmJDnnHNO
+ZmZuv/32uWDBglXiee+997Jnz5759NNP5wcffJBHHnlk/fF/+ctf5le+8pVVljMz99tvv5w+fXpm
+Zl5yySX5/e9/PzMzlyxZkgMHDsznn38+77333txoo43y+eefz8zMxx9/PA899NB8//33MzPzy1/+
+cl555ZXF9SKnTJmSmZnjxo2rb+9zn/tcTpw4sf4833rrrWbbaahhjE2139BZZ52Ve+21V77//vs5
+c+bM3HDDDfP222/PzMxRo0blzTffnO+//37uscce+dprr2Vm5q9//es87rjjMjPz9ddfr2/rzDPP
+zAsvvDAzM8eMGZOf/exnc/ny5TlnzpzcaaedmryGre3xxx9fpQx4OMvITx0WIkmSWlwpVyk95Kau
+V7hz5848/fTTjdZvqt7gwYM5/vjjWbp0KaNGjaK2tpY//OEPPP744+y1114AvP/+++yxxx7NxvPk
+k0+yww47sPPOOwNw9NFHM2nSpDU6pzvuuINZs2bV98guXLiQZ555hvXXX58hQ4bUz5t89913M2PG
+DAYPHgzAe++9R/fupWfqrb/++vVjvQcOHMidd94JwD333MNVV10FlMawd+vWjauvvrrJdprSVPsr
+O/jgg+nSpQv9+vVj+fLljBw5EoB+/foxd+5cnnrqKWbPns2BBx4IlIa79OhRerD27Nmz+fa3v81b
+b73FO++8w4gRI+rbHTVqFJ06daJPnz71veaNXcP2zORakiS1qOeff57OnTvTvXt3zjnnHLbeemse
+e+wxPvjgA7p27droPhMnTmy03r777st9993Hbbfdxhe/+EXGjRvH5ptvzoEHHsivfvWrNYprXadg
+y0x+8pOfrJBMQmlYyMYbb7xCvTFjxvCjH/1olTa6dOlSH0fnzp1ZtmxZs8drqp2mlNv+BhtsAECn
+Tp1W2KdTp04sW7aMzGS33XbjgQceWGXfY489lltuuYWamhquuOIKpk6dukq7dfFD49fwmGOOKfuc
+2hrHXEuSpBazYMECTjnlFE499VQigoULF9KjRw86derE1VdfXT9meNNNN+Xtt9+u36+pei+++CLd
+u3fnpJNO4oQTTuCRRx5h2LBh/PGPf+TZZ58F4N13363v6V653Tq9e/fmhRde4LnnngNY48QcYMSI
+EVx88cX1Y5KffvppFi9evEq94cOHM3nyZF57rfQcvTfffJMXX3yx2baHDx/OxRdfDJR6iRctWrRW
+7VTKLrvswoIFC+qT66VLlzJnzhwA3n77bXr06MHSpUu59tprV9tWY9ewPTO5liRJVfXee+/VT8X3
+yU9+koMOOoizzjoLgP/4j//gyiuvZNiwYTz99NP1Pbz9+/dnvfXWo6amhokTJzZZb+rUqdTW1rL7
+7rtz4403ctppp7HVVltxxRVXcNRRR9G/f3+GDRvGk08+CcDJJ5/MwQcfvMoNjV27dmXSpEkccsgh
+7L333my//fZrfJ4nnngiffr0YcCAAfTt25cvfelLjfYM9+nThx/84AccdNBB9O/fnwMPPLD+ZsCm
+XHDBBdx7773069ePgQMHMmfOnLVqp1LWX399Jk+ezDe+8Q1qamqora2tv8ny+9//PkOHDuXAAw+k
+d+/eq22rsWvYnkVdl3x7NGjQoKy7+7XaIiD559dFwYqfWzv+GCWp4pyKr+144okn2HXXXVs7DKld
+aezfTUTMyMxBq9vXnmtJkiSpQkyuJUmSpApxthBJUpvnMBNJ7YXJtSSp1ZSbNEtSe+GwEEmSJKlC
+TK4lSZKkCjG5liRJVdW5c2dqa2upqalhwIAB9fMhr6m5c+dy3XXXNVvnrbfe4qKLLlqr9qtl//33
+Z3VTB0+dOrX+seRTpkxhwoQJQOmhO0OHDmX33Xdn2rRp3HDDDey6666rzNPdlpx44ok8/vjjrR1G
+qzG5liRJVbXhhhsyc+ZMHnvsMX70ox/xzW9+c63aWdfkuu6pjm3dYYcdxvjx4wG4++676d27N48+
++ij77LMPl19+ORdddBH33ntvWW21xjlfdtll9OnTp8WP21aYXEuSpBazaNEiNt98cwAyk3HjxtG3
+b1/69evH9ddf32z5+PHjmTZtGrW1tUycOJE5c+YwZMgQamtr6d+/P8888wzjx4/nueeeo7a2lnHj
+xjF16lQOOOAARo8eTb9+/QAYNWoUAwcOZLfddmPSpEn1sW2yySZ87WtfY8CAAQwfPpwFCxYApZ7n
+008/nT333JO+ffvy0EMPAbB48WKOP/54Bg8ezO67786tt94KlJ5I+YUvfIH+/fvz+c9/nvfee6/R
+z+L3v/89vXv3Zu+99+amm26qL7/iiis49dRTmTlzJmeccQa33347tbW1nHPOOdx///2ccsopjBs3
+juXLlzNu3DgGDx5M//79ueSSSwAaPedrrrmm/rP60pe+VJ90b7LJJpx55pnU1NQwbNgwXn31VQBe
+ffVVDj/8cGpqaqipqan/tqGpdhpq2FPfVPsNnX322YwZM4aDDjqIXr16cdNNN3HGGWfQr18/Ro4c
+Wf84+RkzZrDffvsxcOBARowYUf80yksvvZTBgwdTU1PDZz7zGd59910Ajj32WMaOHcuee+7Jjjvu
+yOTJkwGYP38+++67L7W1tfTt25dp06Y1en3Wlsm1JEkdRUT1Xs2oe/x57969OfHEE/nOd74DwE03
+3VTfo33XXXcxbtw45s+f32T5hAkT2GeffZg5cyb/+Z//yc9//nNOO+00Zs6cycMPP0zPnj2ZMGEC
+O+20EzNnzuTcc88F4KGHHuKHP/xh/VCFX/ziF8yYMYOHH36YCy+8kDfeeAMoJcsDBgzgkUceYb/9
+9uOcc86pP4fFixfzpz/9iYsuuojjjz8egB/+8Id84hOfYPr06dx7772MGzeOxYsXc/HFF7PRRhsx
+a9YszjzzTGbMmLHKZ7JkyRJOOukkfvvb3zJt2jT+9re/rVKntraW733ve3z+859n5syZnHXWWQwa
+NIhrr72Wc889l8svv5xu3boxffp0pk+fzqWXXsoLL7ywyjk/8cQTXH/99fzxj39k5syZdO7cmWuv
+vbb+vIYNG8Zjjz3Gvvvuy6WXXgrA2LFj2W+//Xjsscd45JFH2G233ZptpylNtb+y5557jttuu41b
+b72Vo48+mgMOOIC//OUvbLjhhtx2220sXbqUr371q0yePJkZM2Zw/PHHc+aZZwJwxBFHMH36dB57
+7DF23XVXLr/88vp258+fz/3338/vfve7+m8DrrvuOkaMGFH/M1ZbW9vsOawpp+KTJKkJzq9dGXXD
+QgAeeOABjjnmGGbPns3999/PUUcdRefOndl6663Zb7/9mD59epPlH/nIR1Zod4899uCHP/wh8+bN
+44gjjmDnnXdu9PhDhgxhhx12qF+/8MILufnmmwF4+eWXeeaZZ9hiiy3o1KkTn//85wE4+uijOeKI
+I+r3OeqoowDYd999WbRoEW+99RZ33HEHU6ZM4bzzzgNKCfNLL73Efffdx9ixYwHo378//fv3XyWm
+J598kh122KE+5qOPPnqFXvRy3HHHHcyaNau+R3bhwoU888wzrL/++iuc8913382MGTMYPHgwUPpj
+p3v37gCsv/769WO9Bw4cyJ133gnAPffcw1VXXQWUxsx369aNq6++usl2mtJU+ys7+OCD6dKlC/36
+9WP58uWMHDkSgH79+jF37lyeeuopZs+ezYEHHgiUhrv06NEDgNmzZ/Ptb3+bt956i3feeYcRI0bU
+tztq1Cg6depEnz596nvNBw8ezPHHH8/SpUsZNWqUybUkSWq/9thjD15//XUWLFhAZjZap6nylY0e
+PZqhQ4dy2223MWLECC677DJ23HHHVeptvPHG9ctTp07lrrvu4oEHHmCjjTZi//33Z8mSJY22Hw16
+5GOl3vmIIDO58cYb2WWXXZrdtynl1GlOZvKTn/xkhWQSSufY8JwzkzFjxvCjH/1olTa6dOlSH0fn
+zp1ZtmxZs8drqp2mlNv+BhtsAECnTp1W2KdTp04sW7aMzGS33XbjgQceWGXfY489lltuuYWamhqu
+uOIKpk6dukq7dfFD6Q+k++67j9tuu40vfvGLjBs3jmOOOabsc1odh4VIktRRZFbvVaYnn3yS5cuX
+s8UWW7Dvvvty/fXXs3z5chYsWMB9993HkCFDmizfdNNNefvtt+vbev7559lxxx0ZO3Yshx12GLNm
+zVqlzsoWLlzI5ptvzkYbbcSTTz7Jn//85/ptH3zwQX0v8HXXXcfee+9dv61u3Pf9999Pt27d6Nat
+GyNGjOAnP/lJfdL26KOPAqXkrW64xOzZs5k1a9YqcfTu3ZsXXniB5557DoBf/epXZX+GdUaMGMHF
+F19cPyb56aefZvHixavUGz58OJMnT+a1114D4M033+TFF19stu3hw4dz8cUXA6Ve4kWLFq1VO5Wy
+yy67sGDBgvrkeunSpcyZMweAt99+mx49erB06dLVDlMBePHFF+nevTsnnXQSJ5xwAo888khFY7Xn
+WpL0oeETH9umujHXUOo9vPLKK+ncuTOHH344DzzwADU1NUQE//M//8PHPvaxJsu32GIL1ltvPWpq
+ajj22GNZsmQJ11xzDV26dOFjH/sY3/3ud/noRz/KXnvtRd++fTn44IM55JBDVohl5MiR/PznP6d/
+//7ssssuDBs2rH7bxhtvzJw5cxg4cCDdunWrT6gBNt98c/bcc08WLVrEL37xCwC+853vcPrpp9O/
+f38yk169evG73/2OL3/5yxx33HH079+f2tpahgwZsspn0rVrVyZNmsQhhxzClltuyd57783s2bPX
+6HM98cQTmTt3LgMGDCAz2WqrrbjllltWqdenTx9+8IMfcNBBB/HBBx/QpUsXfvazn7H99ts32fYF
+F1zAySefzOWXX07nzp25+OKL2WOPPda4nUpZf/31mTx5MmPHjmXhwoUsW7aM008/nd12243vf//7
+DB06lO23355+/fo1+8cVlHr2zz33XLp06cImm2xSP/ylUqLcr17aokGDBuXq5o2slAhIGnw9xIqf
+Wzv+GCWp4jpaktuWx1w/8cQT7Lrrrq0dRruwySab8M4776xSvv/++3PeeecxaNCgVohKraGxfzcR
+MSMzV/tDYM+1JKlsHS1plqQ1ZXItSZIEjfZaAyvcICetjjc0SpL0Ideeh4BKLW1d/72YXEuS9CHW
+tWtX3njjDRNsqQyZyRtvvEHXrl3Xuo2qDguJiLnA28ByYFlmDoqIjwLXA72AucDnMvPvUZrQ8ALg
+U8C7wLGZWdm5USRJ6mB69uzJvHnz6h/lLal5Xbt2pWfPnmu9f0uMuT4gM19vsD4euDszJ0TE+GL9
+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
 "
 >
 </div>
@@ -14042,7 +13866,7 @@ Cvn/RHe9P3SO4dMAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Bootstrapping statistical test</span>
@@ -14073,7 +13897,7 @@ Cvn/RHe9P3SO4dMAAAAASUVORK5CYII=
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Dataset 21 samples, Statistic(Diff mean): -7.1421
-Boostrapped 10000 samples, Statistic (Diff mean): -7.1674
+Boostrapped 10000 samples, Statistic (Diff mean): -7.1652
 
 Hypothesis testing one-tail
 pval: 0.0000000000
@@ -14092,57 +13916,9 @@ Reject null hypothesis ? True , pval:0.0000000000 &lt; alpha:0.00500
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This time we were able to reject the null hypothesis as the $p-value &lt; \alpha = 0.005$ and our confidence interval is &gt; 99.5%</p>
-<p>Another way to verify this is to use a Zscore test since we got a large null distribution (samples) and a Z-test used for the population can then be used.</p>
-<blockquote><p><strong>Note:</strong> Be aware that the sm.stats.proportions_ztest didn't take a negative statistic (from our sample dataset) and thus we need to make it positive and then convert the z score result back to negative</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Computing z_score and p-value</span>
-<span class="n">null_dist_size</span> <span class="o">=</span> <span class="n">null_vals</span><span class="o">.</span><span class="n">size</span>
-<span class="n">dataset_size</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">z_score</span><span class="p">,</span> <span class="n">zpval</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">proportions_ztest</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">u_diff</span><span class="p">,</span> <span class="n">null_vals</span><span class="o">.</span><span class="n">mean</span><span class="p">()],</span> <span class="p">[</span><span class="n">dataset_size</span><span class="p">,</span> <span class="n">null_dist_size</span><span class="p">],</span>\
-                                            <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;larger&#39;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Zscore: </span><span class="si">{:.3f}</span><span class="se">\n</span><span class="s1">p-val: </span><span class="si">{:.20f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">z_score</span><span class="p">,</span> <span class="n">zpval</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Zscore: -58.398
-p-val: 0.00000000000000000000
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The z score indicates our mean should be far away on the left with a p-value similar to the one we got above. This confirms our bootstrapping approach and that we have enough information to reject $H_0$.</p>
+<p>After running bootstrapping, we were able to reject the null hypothesis $H_0$ as the $pvalue &lt; \alpha = 0.005$ and our confidence interval is greater than 99.5%</p>
+<p>Another way to verify this, if we had the population distribution and parameters, is to use a Zscore test.
+Some people consider that the t-test should be used for sample sizes smaller than 30[4]. However, this is not mandatory, it all depends on your analysis and judgment. Since we got a sample size of 24 and we reduce to 21 by eliminating outliers, we wil not use the Z score.</p>
 
 </div>
 </div>
@@ -14151,9 +13927,10 @@ p-val: 0.00000000000000000000
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a id='t-test'></a></p>
-<h4 id="T-test">T-test<a class="anchor-link" href="#T-test">&#182;</a></h4><p>Another way to do the hypothesis testing is through a T-test of one-tail using only our sample data.</p>
-<blockquote><p><strong>Note:</strong> We used scipy <code>ttest_ind()</code> with unequal variance as congruent and incongruent had different variances. We also have to be aware that this function is for two-tailed test, so we need to divide the p-value by 2</p>
+<p><a id='paired_t-test'></a></p>
+<h4 id="Two-sample-Paired-t-test">Two-sample Paired t-test<a class="anchor-link" href="#Two-sample-Paired-t-test">&#182;</a></h4><p>Another way to do the hypothesis testing is through a T-test of one-tail using only our sample data.</p>
+<blockquote><p><strong>Note:</strong> We used scipy <code>ttest_rel()</code> with input related samples congruent and incongruent.  We also have to be aware that this function is for two-tailed test, so we need to divide the p-value by 2.
+The <code>ttest_rel()</code> assumes our samples are normally distributed, but if we believed the distribution was not normal, we could use <code>wilcoxon()</code> which is a two-sample paired t-test for non-normal distributions.</p>
 </blockquote>
 
 </div>
@@ -14164,11 +13941,12 @@ p-val: 0.00000000000000000000
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Scipy statistical test (a-b) - two tails :/</span>
-<span class="n">sp_tstat</span><span class="p">,</span> <span class="n">sp_pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Scipy statistical test (a-b) - is only accounting for two tails, we need to do math on the p-value :/</span>
+<span class="n">sp_tstat</span><span class="p">,</span> <span class="n">sp_pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_rel</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">])</span><span class="c1">#, equal_var=False)</span>
+
 <span class="n">sp_pval</span><span class="o">/=</span><span class="mi">2</span> <span class="c1">#divide pvalue by two because ttest_ind is a two-tailed test</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scipy</span><span class="se">\&#39;</span><span class="s1">s T-test</span><span class="se">\n</span><span class="s1"> Statistic(Diff mean): </span><span class="si">{:.4f}</span><span class="se">\n</span><span class="s1"> pvalue: </span><span class="si">{:.10f}</span><span class="se">\n</span><span class="s1"> Confidence Interval: </span><span class="si">{:.2f}</span><span class="s1">%&#39;</span><span class="o">.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scipy</span><span class="se">\&#39;</span><span class="s1">s two-sample paired t-test</span><span class="se">\n</span><span class="s1"> Statistic(Diff mean): </span><span class="si">{:.4f}</span><span class="se">\n</span><span class="s1"> pvalue: </span><span class="si">{:.10f}</span><span class="se">\n</span><span class="s1"> Confidence Interval: </span><span class="si">{:.2f}</span><span class="s1">%&#39;</span><span class="o">.</span>
       <span class="nb">format</span><span class="p">(</span><span class="n">sp_tstat</span><span class="p">,</span> <span class="n">sp_pval</span><span class="p">,</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">sp_pval</span><span class="p">)))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Reject null hypothesis ? </span><span class="si">{}</span><span class="s1"> , pval:</span><span class="si">{:.10f}</span><span class="s1"> &lt; alpha:</span><span class="si">{:.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sp_pval</span><span class="o">&lt;</span><span class="n">alpha</span><span class="p">,</span><span class="n">sp_pval</span><span class="p">,</span><span class="n">alpha</span><span class="p">))</span>
 </pre></div>
@@ -14187,12 +13965,12 @@ p-val: 0.00000000000000000000
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Scipy&#39;s T-test
- Statistic(Diff mean): -7.7461
- pvalue: 0.0000000009
+<pre>Scipy&#39;s two-sample paired t-test
+ Statistic(Diff mean): -9.8798
+ pvalue: 0.0000000019
  Confidence Interval: 100.00%
 
-Reject null hypothesis ? True , pval:0.0000000009 &lt; alpha:0.00500
+Reject null hypothesis ? True , pval:0.0000000019 &lt; alpha:0.00500
 </pre>
 </div>
 </div>
@@ -14206,10 +13984,11 @@ Reject null hypothesis ? True , pval:0.0000000009 &lt; alpha:0.00500
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this t-test we also found that we have an approximate 100% confidence interval and that our p-value is smaller than alpha. Thus, we have enough information to reject the null hypothesis.</p>
-<blockquote><p><strong>Note:</strong> The p-value and the statistic we use have different values than the bootstrapping analysis. This is due to the fact that a t-test is using only the sample data (not population which is what bootstrapping simulates). Thus, there are different equations to calculate the t statistic and that leads to a different p-value.</p>
+<blockquote><p><strong>Note:</strong> The p-value and the statistic we use have different values than the bootstrapping analysis. This is due to the fact that a t-test is using only the sample data (not any simulated distribution with tons of samples which is what bootstrapping does). Thus, there are different equations to calculate the t statistic that lead to a different p-value.</p>
 </blockquote>
-<p>In order to prove that our statistic is correct for the t-test we can use the equation for t-test statistic with unequal variance:</p>
-$$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}$$
+<p><a id='one-sample_t-test'></a></p>
+<h4 id="One-sample-t-test">One-sample t-test<a class="anchor-link" href="#One-sample-t-test">&#182;</a></h4><p>As additional step to prove a two-sample paired t-test is at its core a one-sample t-test, we can run a one-sample test using <code>ttest_1samp()</code> function from scipy. The result should match the two-sample paired t-test as a two-sample paired t-test runs a one-sample t-test after it has the difference in means of both related groups.It also assumes their means centered at 0.</p>
+
 </div>
 </div>
 </div>
@@ -14218,11 +13997,14 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n1</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">n2</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">t_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="n">n1</span> <span class="o">+</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">/</span><span class="n">n2</span><span class="p">)</span>
-<span class="n">t_diff</span> <span class="o">=</span> <span class="n">u_diff</span><span class="o">/</span><span class="n">t_s</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T-test statistic: </span><span class="si">{:.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t_diff</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># One-sample t-test - is defined as a two-tailed test, so we must divide the resulting pvalue by 2</span>
+<span class="n">onesamp_tstat</span><span class="p">,</span> <span class="n">onesamp_pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Diff&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">onesamp_pval</span><span class="o">/=</span><span class="mi">2</span> <span class="c1">#divide pvalue by two because ttest_ind is a two-tailed test</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Scipy</span><span class="se">\&#39;</span><span class="s1">s one-sample t-test</span><span class="se">\n</span><span class="s1"> Statistic(Diff mean): </span><span class="si">{:.4f}</span><span class="se">\n</span><span class="s1"> pvalue: </span><span class="si">{:.10f}</span><span class="se">\n</span><span class="s1"> Confidence Interval: </span><span class="si">{:.2f}</span><span class="s1">%&#39;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">onesamp_tstat</span><span class="p">,</span> <span class="n">onesamp_pval</span><span class="p">,</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">onesamp_pval</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Reject null hypothesis ? </span><span class="si">{}</span><span class="s1"> , pval:</span><span class="si">{:.10f}</span><span class="s1"> &lt; alpha:</span><span class="si">{:.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">onesamp_pval</span><span class="o">&lt;</span><span class="n">alpha</span><span class="p">,</span><span class="n">onesamp_pval</span><span class="p">,</span><span class="n">alpha</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -14239,7 +14021,13 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>T-test statistic: -7.7461
+<pre>
+Scipy&#39;s one-sample t-test
+ Statistic(Diff mean): -9.8798
+ pvalue: 0.0000000019
+ Confidence Interval: 100.00%
+
+Reject null hypothesis ? True , pval:0.0000000019 &lt; alpha:0.00500
 </pre>
 </div>
 </div>
@@ -14252,7 +14040,51 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After implementing the equation above we can see it matches the t-statistic that scipy used to compute our p-value. This lead us to conclude that it was done as expected.</p>
+<p>The results from the two-sample paired t-test matches our result from a one-sample t-test, confirming that at the core of the first we run a one-sample t-test.</p>
+<p>In order to prove that our statistic is correct for the two-sample paired t-test and the one-sample t-test we can use the equation for t-test statistic:</p>
+$$t = \frac{\bar{x_0}-\bar{x_1}}{\frac{s}{\sqrt{n}}}$$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Calculating our t-statistic from an equation</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Congruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Incongruent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">/</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T-test statistic: </span><span class="si">{:.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>T-test statistic: -9.8798
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After implementing the equation above we can see it matches the two-sample paired and one-sample t-statistic we used to compute our p-value. This lead us to conclude that our results match and yield expected values.</p>
 
 </div>
 </div>
@@ -14261,7 +14093,7 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In both cases using bootstrapping and t-test, the pval &lt; 0.005 which was our $\alpha$ threshold for a Type I error. Thus we have enough information to reject the null hypothesis.</p>
+<p>In all cases using bootstrapping and t-tests, the pval &lt; 0.005 which was our $\alpha$ threshold for a Type I error. Thus we have enough information to reject the null hypothesis.</p>
 
 </div>
 </div>
@@ -14279,7 +14111,7 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The null hypothesis ($H_0$) of our problem is that the reaction time of participants in the Stroop test was greater or equal for congruent words (words colored as their label, e.g. <font color='green'>GREEN</font>, <font color='blue'>BLUE</font>) than for incongruent words (words colored different than their label, e.g. <font color='red'>GREEN</font>, <font color='cyan'>PINK</font>). However, we challenged this idea proposing an alternative hypothesis saying that the reaction time for congruent words was faster than for incongruent words. During our hypothesis test, we decided to choose a confidence level of 99.5% resulting in a type I error threshold of $\alpha = 0.005$. After our hypothesis test using bootstrapping and t-test one-tail test with unequal variance we got a $pvalue &lt; \alpha$. Since the pvalue was smaller than $\alpha$ we got enough information to reject $H_0$ and conclude that based on our test we have more than 99.5% confidence that the participants have a faster reaction time when going through all the congruent words than when doing the same for incongruent words. This is in fact something we expected because we believed that having color not matching the words make us think more about what we see and what it means. We believe we will need to think more before speaking when looking at incongruent words. In other words, the Stroop effect indeed interferes people’s reaction time on a task when reading incogruent words.</p>
+<p>The null hypothesis ($H_0$) of our problem is that the reaction time of participants in the Stroop test was greater or equal for congruent words (words colored as their label, e.g. <font color='green'>GREEN</font>, <font color='blue'>BLUE</font>) than for incongruent words (words colored different than their label, e.g. <font color='red'>GREEN</font>, <font color='cyan'>PINK</font>). However, we challenged this idea proposing an alternative hypothesis saying that the reaction time for congruent words was faster than for incongruent words. During our hypothesis test, we decided to choose a confidence level of 99.5% resulting in a type I error threshold of $\alpha = 0.005$. After our hypothesis test using bootstrapping, two-sample paired t-test and one-sample t-test one-tailed tests we got a $pvalue &lt; \alpha$. Since the pvalue was smaller than $\alpha$ we got enough information to reject $H_0$ and conclude that based on our test we have more than 99.5% confidence that the participants have a faster reaction time when going through all the congruent words than when doing the same for incongruent words. This is in fact something we expected because we believed that having color not matching the words make us think more about what we see and what it means. We believe we will need to think more before speaking when looking at incongruent words. In other words, the Stroop effect indeed interferes people’s reaction time on a task when reading incogruent words.</p>
 
 </div>
 </div>
@@ -14297,7 +14129,7 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A possible explanation for the Stroop effect is that the humand brain is trained to automatically process words rather than color when looking at text[4]. In other words, the human brain prioritizes some tasks and the way we shaped it is to read before deciding the color of words. As a result, when we are asked to only mention the color of a printed word, we need to step back and analyze the color instead of reading, which can cause a conflict in our automatic reply and give the entrance to our cognitive skill instead of the automatic reply we have developed over the time.</p>
+<p>A possible explanation for the Stroop effect is that the humand brain is trained to automatically process words rather than color when looking at text[6]. In other words, the human brain prioritizes some tasks and the way we shaped it is to read before deciding the color of words. As a result, when we are asked to only mention the color of a printed word, we need to step back and analyze the color instead of reading, which can cause a conflict in our automatic reply and give the entrance to our cognitive skill instead of the automatic reply we have developed over the time.</p>
 <p>There are some tests that branched from the Stroop effect to analyze humand cognition and sensory reactions. The one test that caught my attention is related to a test in which an arrow is drawn in up, down, left, right pointing positions and in every drawing the arrow has a word inside describing the direction it is pointing to. In the congruent case, the word matchs with the direction of the arrow. In the incongruent case, the arrow and the word would not match.</p>
 
 </div>
@@ -14309,9 +14141,11 @@ $$t = \frac{\bar{x_0}-\bar{x_1}}{\sqrt{\frac{s^{2}_0}{n_0}+\frac{s^{2}_1}{n_1}}}
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="References">References<a class="anchor-link" href="#References">&#182;</a></h2><p>[1] Statistics: The Science of Decisions Project Instructions.<a href="https://docs.google.com/document/d/1-OkpZLjG_kX9J6LIQ5IltsqMzVWjh36QpnP2RYpVdPU/pub?embedded=True">https://docs.google.com/document/d/1-OkpZLjG_kX9J6LIQ5IltsqMzVWjh36QpnP2RYpVdPU/pub?embedded=True</a></p>
 <p>[2] Kang,Eugine. "Hypothesis Test". <a href="https://medium.com/@kangeugine/hypothesis-test-21795f788f7d">https://medium.com/@kangeugine/hypothesis-test-21795f788f7d</a></p>
-<p>[3] T-test table. <a href="https://www2.palomar.edu/users/rmorrissette/Lectures/Stats/ttests/ttests.htm">https://www2.palomar.edu/users/rmorrissette/Lectures/Stats/ttests/ttests.htm</a></p>
-<p>[4] Wikipedia. "Stroop effect". <a href="https://en.wikipedia.org/wiki/Stroop_effect">https://en.wikipedia.org/wiki/Stroop_effect</a></p>
-<p>[5]Macleod, M. Colin. <a href="http://imbs.uci.edu/~kjameson/ECST/MacLeod_TheStroopEffect.pdf">“The Stroop effect”</a>. Encyclopedia of Color Science and Technology,1,2015.</p>
+<p>[3] Laerd Statistics."Dependent t-test for paired samples".<a href="https://statistics.laerd.com/statistical-guides/dependent-t-test-statistical-guide.php">https://statistics.laerd.com/statistical-guides/dependent-t-test-statistical-guide.php</a></p>
+<p>[4] Statistics How To."T-Score vs. Z-Score: What’s the Difference?"<a href="http://www.statisticshowto.com/probability-and-statistics/hypothesis-testing/t-score-vs-z-score/">http://www.statisticshowto.com/probability-and-statistics/hypothesis-testing/t-score-vs-z-score/</a></p>
+<p>[5] T-test table. <a href="https://www2.palomar.edu/users/rmorrissette/Lectures/Stats/ttests/ttests.htm">https://www2.palomar.edu/users/rmorrissette/Lectures/Stats/ttests/ttests.htm</a></p>
+<p>[6] Wikipedia. "Stroop effect". <a href="https://en.wikipedia.org/wiki/Stroop_effect">https://en.wikipedia.org/wiki/Stroop_effect</a></p>
+<p>[6]Macleod, M. Colin. <a href="http://imbs.uci.edu/~kjameson/ECST/MacLeod_TheStroopEffect.pdf">“The Stroop effect”</a>. Encyclopedia of Color Science and Technology,1,2015.</p>
 
 </div>
 </div>
