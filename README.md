@@ -32,12 +32,14 @@ After that command a tab in your browser will pop up with all the notebook on it
 
 >**Recommendations:** 
 Check the **European Soccer** notebook (uses a SQLite DB, Pandas, 2D and 3D plots)
+For hypothesis testing review the **Stroop Effect** notebook, it has a simple explanation on how to do Boostrapping and t-test one-tail
 If you want to brush up basic SQL queries, check the **SQL Appendix**
 
 1. [Temperature Trends per Year](./TemperatureTrends/Temperature_Trends.ipynb)
 2. [Bike Sharing](./BikeSharing/Bike_Share_Analysis.ipynb)
 3. **[European Soccer](./SoccerTeamsAnalysis/European_Soccer.ipynb)**
 4. [AB Test for a Web Page Release](./ABTest/AB_test.ipynb)
+5. **[Stroop Effect](./StroopEffect/Stroop_Effect_Perceptual_Phenomenon.ipynb)**
 
 ## Appendix
 
