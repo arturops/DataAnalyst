@@ -30,54 +30,92 @@ pf <- read.csv(file, sep='\t')
 ***
 
 ### Histogram of Users' Birthdays
-Notes:
+Plot a histogram of the day of birthday of users using the qplot function from ggplot2 library.
+>Note: We can change the theme in which we plot the histogram using the ggthemes library. We can set the theme with theme_set() function. Other ways to set themes and more themes available at [ggthemes github](https://github.com/jrnold/ggthemes#geoms).
 
 ```{r Histogram of Users\' Birthdays}
-install.packages('ggplot2')
+# Load ggplot2 library
+#install.packages('ggplot2')
 library(ggplot2)
+
+# Load ggthemes
+#install.packages('ggthemes', dependencies = TRUE)
+library(ggthemes)
+
+# Set the theme to theme_minimal and font size 24
+theme_set(theme_minimal(8))
+
+# Show the columns of the dataset
+names(pf)
+
+# Plot a histogram with default configuration
+qplot(data = pf, x = dob_day)
+
+```
+
+After plotting the data we noticed that looking at it is not very easy, so we need to improve the visualization of this histogram. We can show all the days in the x axis using ```scale_x_continuos()``` function.
+
+```{r}
+# Plot a histogram with all days of a month shown as x ticks
+# qplot(data = pf, x = dob_day) + scale_x_continuous(breaks=1:31)
+
+# Also plotting the same as above but using ggplot instead of qplot function
+ggplot(aes(x = dob_day), data = pf) +
+  geom_histogram(binwidth = 0.5 ) +
+  scale_x_continuous(breaks = 1:31)
+
 ```
 
 ***
 
 #### What are some things that you notice about this histogram?
-Response:
+Notice that in this plot the first day has a lot more users, which would mean that more people is borned on the first day of a month or that there is a default day of birthday when signing up. On the other hand, we can see that 31 is the lowest bar and it can be caused due to half of the months have only 30 days.
 
 ***
 
-### Moira's Investigation
-Notes:
+### Moira's Investigation 
+We are going to reproduce a study done by a data scientist at Facebook, Moira Burke. 
 
 ***
 
 ### Estimating Your Audience Size
-Notes:
+Moira and her team analyzed users publications and audience and found people tend to understimate their audience size. You can find more in their paper about ["Quantifying the Invisible Audience in Social Networks"](http://hci.stanford.edu/publications/2013/invisibleaudience/invisibleaudience.pdf).
 
 ***
 
 #### Think about a time when you posted a specific message or shared a photo on Facebook. What was it?
-Response:
+A trip to Japan
 
 #### How many of your friends do you think saw that post?
-Response:
+Around 200 of them
 
 #### Think about what percent of your friends on Facebook see any posts or comments that you make in a month. What percent do you think that is?
-Response:
+I think only 20% of my friends saw it.
 
 ***
 
 ### Perceived Audience Size
-Notes:
+As Moira and her team found that usually the audience was underestimated by a quarter of the size, we are going to plot histograms to understand what people guessed about their audience size.
 
 ***
 ### Faceting
-Notes:
+Before we plotted all our days of the year/month in one single plot. We would like to separate that plot in histograms per month and look at them. We can use faceting to do this. There are two options for faceting, here we will use ```facet_wrap()``` as it is easier to use when dealing with one variable. However, when dealing with more than one variable it might be better to use ```facet_grid()```, to learn more about how to use it read this [documentation](http://www.cookbook-r.com/Graphs/Facets_(ggplot2)/).
 
 ```{r Faceting}
+
+# Plot with month as facet (3 columns, meaning 3 months per row)
+ggplot(aes(x = dob_day), data = pf) +
+      geom_histogram(binwidth = 0.5) +
+      scale_x_continuous(breaks = 1:31) +
+      facet_wrap(~dob_month, ncol = 2)
 
 ```
 
 #### Let’s take another look at our plot. What stands out to you here?
-Response:
+Three main observations:
+* January first is the highest bar and maybe it is not normal as all other days in the year are not even a quarter of it. 
+* Some months wihtout 31 day on them have no birthdays which is a good indication 
+* February 29 has the smallest amount a day can have birthdays on and that can be related to the calendar in which only every 4 years we have February 29.
 
 ***
 
