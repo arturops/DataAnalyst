@@ -1,21 +1,30 @@
 
+# Check current path
 getwd()
-setwd('~/github/DataAnalyst/RbasicsAppendix/orderFactors/')
 
+# Set the path to the file
+path <- '~/github/DataAnalyst/Rbasics_Appendix/orderFactors/'
+setwd(path)
+
+# Load data
 reddit <- read.csv('reddit.csv')
 
+# Inspect data 
 table(reddit$employment.status)
 
 str(reddit)
 
 levels(reddit$age.range)
 
+# Load plotting library
 library(ggplot2)
+
+# Plot data
 qplot(data=reddit, x = age.range)
 qplot(data=reddit, x = income.range)
 
 
-# Ordering age range from youngest to oldest
+# Ordering age range from youngest to oldest and plot it
 reddit$age.range <- ordered(reddit$age.range, 
                             levels = c("Under 18", "18-24", "25-34", 
                                        "35-44", "45-54", "55-64", 
@@ -23,7 +32,7 @@ reddit$age.range <- ordered(reddit$age.range,
 
 qplot(data=reddit, x = age.range)
 
-# Ordering the income from lowest to highest
+# Ordering the income from lowest to highest and plot it
 levels(reddit$income.range)
 
 s = c("Under $20,000","$20,000 - $29,999","$30,000 - $39,999", 
