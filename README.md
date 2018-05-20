@@ -44,7 +44,7 @@ If you want to brush up basic SQL queries, check the **SQL Appendix**
 ## Appendix
 
 1. [Basic SQL queries and examples](./SQL_Appendix)
-2. [R basics examples' index](./Rbasics_Appendix)
+2. [R basics examples' index](./Rbasics_Appendix/README.md)
 3. [Wikipedia Web Crawler (python scripts - Comming Soon)](./WebCrawler)
 
 
