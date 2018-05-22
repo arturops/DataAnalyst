@@ -120,62 +120,82 @@ Three main observations:
 ***
 
 ### Be Skeptical - Outliers and Anomalies
-Notes:
+The approach to deal with outliers depends on what your analysis is looking to answer since outliers can have many causes, for example:
+
+* Accurate data about an extreme case
+* Bad data
+* Limitations of data
+
+One of the approaches used is to replace extreme values with normal values or mean values.
 
 ***
 
 ### Moira's Outlier
-Notes:
-#### Which case do you think applies to Moira’s outlier?
-Response:
+In this section, we will be checking an outlier in the data of the audience estimation analysis.
 
+#### Which case do you think applies to Moira’s outlier?
+Bad data of an extreme case since you cannot have 1,000,000 friends on facebook and the data showed 10,000,000 friends watched a post. 
 ***
 
 ### Friend Count
-Notes:
+
 
 #### What code would you enter to create a histogram of friend counts?
 
 ```{r Friend Count}
-
+qplot(data = pf, x = friend_count)
 ```
 
 #### How is this plot similar to Moira's first plot?
-Response:
+It has some values that are very large and do not let us appreciate all the data properly.
 
 ***
 
 ### Limiting the Axes
-Notes:
+In order for us to better see and understand the data, we want to limit the axes. We have two options:
+* ```xlim``` parameter inside ```qplot()```
+* ```scale_x_continuous(limits = c(low,high))`` function added to ```qplot()```
 
 ```{r Limiting the Axes}
 
+# option 1, use xlim
+qplot(data = pf, x = friend_count, xlim = c(0,1000))
+
+#option 2, use x_scale_continuous
+qplot(data = pf, x = friend_count) + scale_x_continuous(limits=c(0,1000))
 ```
 
 ### Exploring with Bin Width
-Notes:
+In the plot above, we can see that we have bins in ranges, it will be good to change the ```binwidth``` to explore our data and find how it all distributes with different bin ranges. It will be a good idea to show more ticks by using the ```breaks``` argument in ```scale_x_continuous()```.
 
 ***
 
 ### Adjusting the Bin Width
-Notes:
+```{r Adjusting Bins}
+qplot(data = pf, x = friend_count, binwidth=25) +
+  scale_x_continuous(limits = c(0,1000), breaks = seq(0,1000,50))
+```
 
 ### Faceting Friend Count
+Now, it will be interesting to split the histogram by gender to understand what males or females think about their audience.
 ```{r Faceting Friend Count}
-# What code would you add to create a facet the histogram by gender?
-# Add it to the code below.
+# Facet the histogram by gender
 qplot(x = friend_count, data = pf, binwidth = 10) +
   scale_x_continuous(limits = c(0, 1000),
-                     breaks = seq(0, 1000, 50))
+                     breaks = seq(0, 1000, 50)) +
+  facet_wrap(~gender, ncol = 2)
 ```
 
 ***
 
 ### Omitting NA Values
-Notes:
+We noticed that the plot above had a third plot with title NA. This means some users did not define their gender. To remove the NA data we can ```subset``` our dataset using ```!is.na()``` with the ```gender``` column.
 
 ```{r Omitting NA Values}
-
+qplot(x = friend_count, data = subset(pf, !is.na(gender)), binwidth = 10) +
+  scale_x_continuous(limits = c(0, 1000),
+                     breaks = seq(0, 1000, 50)) +
+  facet_wrap(~gender, ncol = 2)
 ```
 
 ***
