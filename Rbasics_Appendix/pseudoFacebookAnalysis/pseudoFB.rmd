@@ -290,26 +290,95 @@ The highest number of users is from 12 to 35 years old. We also have some fliers
 
 ***
 
-### The Spread of Memes
-
-***
-
-### Lada's Money Bag Meme
-Notes:
-
-***
-
 ### Transforming Data
-Notes:
+If we encounter **overdispersed** data, we can apply transformations to our data. A log transformation is very common as the logarithm is used to represent big manitudes into small order magnitudes. 
+Another useful transformation is the square root transform.
+We will apply these transformations to our age and friends count data to see the outcomes.
+
+**Note:** Overdispersed data means that some of our values have a frequency of ocurrance greater by a big amount (around 100 times) compared to other values.
+
+```{r Transforming Data}
+
+summary(pf$friend_count)
+
+# we add +1 to avoid log 0 which is infinite
+summary(log10(pf$friend_count + 1)) 
+summary(sqrt(pf$friend_count))
+
+#install.packages('gridExtra')
+library(gridExtra)
+
+f1 <- ggplot(aes(x = friend_count), data = pf) +
+      geom_histogram(binwidth = 5, color = 'black', fill = '#F79420') + 
+      xlab('Number of Friends') +
+      ylab('Frequency') +
+    scale_x_continuous(breaks = seq(0,300,50), limits = c(0,300))
+
+f2 <- ggplot(aes(x = log10(friend_count + 1)), data = pf) +
+      geom_histogram(binwidth = .2, color = 'black', fill = '#F79420') + 
+      xlab('Number of Friends') +
+      ylab('Frequency') +
+    scale_x_continuous(breaks = seq(0,10,1), limits = c(0,10))
+
+f3 <- ggplot(aes(x = sqrt(friend_count)), data = pf) +
+      geom_histogram(binwidth = 0.75, color = 'black', fill = '#F79420') + 
+      xlab('Number of Friends') +
+      ylab('Frequency') +
+    scale_x_continuous(breaks = seq(0,60,10), limits = c(0,60))
+
+
+grid.arrange(f1, f2, f3, ncol=1)
+```
 
 ***
+There is another syntax we can use for plotting multiple plots using ```gridExtra``` library. We use it below to plot the age data.
 
-### Add a Scaling Layer
-Notes:
+```{r}
 
-```{r Add a Scaling Layer}
+summary(pf$age)
+summary(log10(pf$age + 1))
+summary(sqrt(pf$age))
+
+
+p1 <- ggplot(aes(x = age), data = pf) +
+    geom_histogram(color = 'black', fill = '#F79420') + 
+    scale_x_continuous(breaks = seq(10,115,5), limits = c(0,115)) +
+    #xlab('Users Age') +
+    ylab('Number of Users')
+
+p2 <- p1 + scale_x_log10()
+
+p3 <- p1 + scale_x_sqrt()
+
+grid.arrange(p1, p2, p3, ncol = 1)
+```
+
+***
+**Note:** We can also use qplot.
+```
+p1 <- qplot()
+p2 <- p1 + scale_x_log10()
+p3 <- p1 + scale_x_sqrt()
+
+grid.arrange(p1,p2,p3, ncol = 1)
 
 ```
+
+From the plots above we can see that the log scale is a good fit since it fits our data making it a distribution close to normal.
+
+### Add a Scaling Layer
+If you look at the plots above you can see the scales when using ```log10()``` inside ggplot/qplot is different that when we used ```scale_x_log10()```. Let's look this more in detail using the ```friend_count``` column. 
+
+```{r Add a Scaling Layer}
+p1 <- qplot(x = log10(friend_count + 1), data = pf)
+p2 <- qplot(x = friend_count, data = pf ) + scale_x_log10()
+grid.arrange(p1, p2, ncol = 2)
+
+```
+
+The difference on the plots:
+* ```log10()``` inside qplot/ggplot x value uses the scale of the value we calculate from the column data.
+* ```scale_x_log10()``` uses the actual scale of the column we use in x.
 
 ***
 
