@@ -405,49 +405,117 @@ qplot(x = friend_count, y = ..count../sum(..count..),
   scale_x_continuous(breaks = seq(0,300,50), lim = c(0,300))
 ```
 
+**Note:** If you want to reproduce the same plot using ggplot here is how:
+```
+ggplot(aes(x = friend_count, y = ..count../sum(..count..)),
+       data = subset(pf, !is.na(gender))) +
+  geom_freqpoly(aes(color = gender), binwidth=10) +
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 50)) +
+  xlab('Friend Count') +
+  ylab('Proportion of users with that friend count')
+```
+
 ***
 
 ### Likes on the Web
-Notes:
+Since we got the proportion of friends per gender, we want to know the likes they got from web pages.
 
 ```{r Likes on the Web}
+ggplot(aes(x = www_likes ),
+       data = subset(pf, !is.na(gender))) +
+  geom_freqpoly(aes(color = gender)) +
+  scale_x_continuous() +
+  scale_x_log10() +
+  xlab('Web Likes') +
+  ylab('Proportion of Web Likes Per Gender')
 
 ```
 
+We can tell that males start with more likes, but eventually females have more likes. This doesn't help us answer our original question of who has more likes?
+
+**Note:**  There is another alternative to plot the data, using ```qplot()```
+
+```{r}
+qplot(x = www_likes, data = subset(pf, !is.na(gender)), geom = 'freqpoly',
+      color = gender) +
+  scale_x_continuous() + scale_x_log10()
+```
+
+In order to answer our question, let's find the number of likes counts for males and females.
+
+```{r}
+by(pf$www_likes, pf$gender, sum)
+
+```
+
+From our calculation above we can see that females have more likes. This matches with the females having more users with more likes in the histogram. We can now confirm that the females actually have more likes.
 
 ***
 
 ### Box Plots
-Notes:
+Let's look at the friend counts' distributions by gender. 
 
 ```{r Box Plots}
-
+qplot(x = gender, y = friend_count, data = subset(pf,!is.na(gender)), 
+      geom = 'boxplot')
 ```
 
 #### Adjust the code to focus on users who have friend counts between 0 and 1000.
+We have many outliers, so we are going to limit the friend count from 0 to 1000.
+
+**Note:** An outlier is a value 1.5 times greater than the IQR.
 
 ```{r}
-
+qplot(x = gender, y = friend_count, data = subset(pf,!is.na(gender)), 
+      geom = 'boxplot', ylim = c(0,1000))
 ```
+
+
+We used the parameter ```ylim``` to adjust the boxplot to the range 0,1000; however, this parameter removes all the points beyond 1000. This will give a different boxplot since those points won't be used in the calculation of the IQR.
+We need to use a new function for the plot to have the true box plot: ```coord_cartesian()```
+
+```{r}
+qplot( x = gender, y = friend_count, data = subset(pf, !is.na(gender)),
+       geom = 'boxplot') +
+  coord_cartesian(ylim = c(0,1000))
+```
+
+Now, the boxplot with ```coord_cartesian()``` give us a different IQR which used all the values we have in our first plot. This is the boxplot we want to inspect and no the previous plot using ```ylim```. 
 
 ***
 
 ### Box Plots, Quartiles, and Friendships
-Notes:
+It will be a good idea to show that the ``coord_cartesian()``` function matches the IQR from our friend count. We will need to zoom in the IQR are of our previous plot.
 
 ```{r Box Plots, Quartiles, and Friendships}
+by(pf$friend_count, pf$gender, summary)
 
+qplot(x = gender, y = friend_count, data = subset(pf, !is.na(gender)),
+      geom = 'boxplot') +
+  coord_cartesian(ylim = c(0,250))
 ```
+
+From the summary, you can see that the females data matches the plot as the first quartile is 37 and the therd quartile is 244, those are very close values to our plot. The same happens for males, where the first quartile is 27 and the third quartile is 182, both values match our boxplot. 
 
 #### On average, who initiated more friendships in our sample: men or women?
-Response:
-#### Write about some ways that you can verify your answer.
-Response:
+
+Using the same technique above let's explore who males or females inititated more friendships.
+
 ```{r Friend Requests by Gender}
+
+by(pf$friendships_initiated, pf$gender, sum)
+
+by(pf$friendships_initiated, pf$gender, summary)
+
+qplot(x = gender, y = friendships_initiated, 
+      data = subset(pf, !is.na(gender)), geom = 'boxplot') + 
+  coord_cartesian(ylim = c(0,150))
 
 ```
 
-Response:
+We can see that men initiated more friendships, but on average women initiated more friendships. The median of the distributions also show that women started more friendships, 4 more frienships to be precise.
+
+The boxplot supports our conclusion.
 
 ***
 
