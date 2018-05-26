@@ -384,9 +384,25 @@ The difference on the plots:
 
 
 ### Frequency Polygons
+In order to compare the two histograms we can make a frequency polygon instead of calling ```facet_wrap()```. We need to specify in ```qplot()``` the parameter ```geom = 'freqpoly``` and to identify the graphs better we can assign a color to each of them using the parameter ```color = gender```
 
 ```{r Frequency Polygons}
+qplot(x = friend_count, data = subset(pf, !is.na(gender)),
+      xlab = 'Friend Count',
+      ylab = 'Frequency',
+      binwidth = 10, geom = 'freqpoly', color = gender) +
+  scale_x_continuous(lim = c(0,1000), breaks = seq(0,1000,50))
+```
 
+Another improvement we can make is to show the proportion of users with a specific friend count rather than the number of users. In order to do such thing, we need to add a parameter ```y``` in qplot and define ti as the proportion value.
+
+```{r}
+qplot(x = friend_count, y = ..count../sum(..count..),
+      data = subset(pf, !is.na(gender)), 
+      xlab = 'Friend Count',
+      ylab = 'Proportion of Users with that Friend Count',
+      binwidth = 10, geom = 'freqpoly', color = gender) + 
+  scale_x_continuous(breaks = seq(0,300,50), lim = c(0,300))
 ```
 
 ***
