@@ -515,25 +515,39 @@ qplot(x = gender, y = friendships_initiated,
 
 We can see that men initiated more friendships, but on average women initiated more friendships. The median of the distributions also show that women started more friendships, 4 more frienships to be precise.
 
-The boxplot supports our conclusion.
+The boxplot supports our conclusion and it is very useful to comprehend the distribution of our data and to find which measure of center is better in our analysis.
 
 ***
 
 ### Getting Logical
-Notes:
+As an extra note, there is another method to process our data and get the results we want. Here we will use the mobile_likes to determine how many users signed in using their mobile. We will need to binarize the mobile_likes column. We can do this using ```ifelse()``` in mobile_likes which if it is greater than 0 means the user signed in using his/her mobile. We can store this data in a new variable that we can use to perform an analysis on it.
 
 ```{r Getting Logical}
+summary(pf$mobile_likes)
 
+# Show the users that did mobile likes and the ones who didn't
+summary(pf$mobile_likes > 0)
+
+mobile_check_in <- NA
+# Binarize the data
+pf$mobile_check_in <- ifelse(pf$mobile_likes > 0, 1, 0)
+# Create a factor out of the binary data
+pf$mobile_check_in <- factor(pf$mobile_check_in)
+# Show a summary of the data
+summary(pf$mobile_check_in)
+
+# Calculate the percentage of mobile sign in users 
+pct_mobile <- 100.0 * sum(pf$mobile_check_in == 1) / length(pf$mobile_check_in)
+pct_mobile
 ```
 
-Response:
+From the analysis above we can use it to make a decision on if we should spend time in our mobile development or not.
+
+The percentage of users using the mobile sign in is 64.59%. It might be worth it to spend time developing the mobile application.
 
 ***
 
 ### Analyzing One Variable
-Reflection:
+After going through all that exercise and some bonus exercises along the way, we can conclude that R basic skills to plot and summarize datasets are very useful skills when analyzing a single variable in our dataset.
 
-***
-
-Click **KnitHTML** to see all of your hard work and to have an html
-page of this lesson, your answers, and your notes!
+We demosntrated the power of R when it comes to splitting data by categories using ```facet_wrap``` and we also show how R can summarize data in different ways using the function ```by()```. All in all, this introductory exercise to R is worth the effort to getting started with some R capablities when analyzing a single variable using different cathegories and when plotting data.
