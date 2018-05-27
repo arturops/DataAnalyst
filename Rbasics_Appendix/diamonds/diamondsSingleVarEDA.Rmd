@@ -1,0 +1,155 @@
+---
+title: "Diamonds.rmd"
+author: "Arturo Parrales"
+date: "5/27/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Diamond Dataset Exploration
+
+In this project we will analyze the diamonds dataset from the ggplot package.
+
+```{r diamond}
+#Load ggplot first
+library(ggplot2) 
+
+# Load diamonds dataset contained in ggplot package
+data(diamonds)
+
+```
+
+Once we loaded the dataset, we can see the diamonds dataset has:
+
+```{r dataset size, echo=FALSE}
+print('Observations: ')
+nrow(diamonds) 
+print('Variables: ')
+ncol(diamonds)
+```
+
+After loading the dataset, we can learn more from its documentation by typing ```?diamonds```. Somehting to notice about diamonds:
+* Color of diamond has scale from J (worst) to D (best)
+* Clarity of a diamond is measured on how clear a diamond is. The scale goes from I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best).
+
+We can look at the datatypes in our dataset using ```str```
+
+```{r}
+str(diamonds)
+```
+
+From our datatypes, we can see that we have 3 ordered factor variables: cut, color and clarity.
+
+If we are more curious about our dataset, we can make a summary of our dataset.
+
+```{r diamonds summary}
+summary(diamonds)
+```
+
+***
+
+## Distribution of Price
+
+Now, we can try to understand the distribution of the price of diamonds
+
+```{r}
+summary(subset(diamonds$price, !is.na(diamonds$price)))
+
+qplot(x = price, data = subset(diamonds, !is.na(price)), 
+  binwidth = 500,
+  color = I('black'), fill = I('#099DD9'),
+  xlab = 'Price',
+  ylab = 'Number of Diamonds') +
+  scale_x_continuous(breaks = seq(0,20000,1250))
+```
+
+From our summary statistics and histogram we can tell that the distribution of price is long-tailed and right-skewed. The median is 2401, while the mean is 3933. This confirms that the plot is correct as the mean is greater than the median. Thus, for this type of distribution, our median is a better measure of center.
+
+## Price Subsets
+
+Now, we want to answer:
+
+How many diamonds cost less than $500 ?
+
+We can start doing logical operations in our dataset
+
+```{r}
+d_500 <- ifelse(diamonds$price < 500, 1, 0)
+sum(d_500)
+```
+
+We have that 1729 diamonds cost less than $500.
+
+What about diamonds that cost less than $250 ?
+```{r}
+d_250 <- ifelse(diamonds$price < 250, 1, 0)
+sum(d_250)
+```
+
+There are no diamonds that cost less than $250.
+
+If we look at the other side of the spectrum, we would like to know if there are much more expensive diamonds equal or greater than $15000.
+
+```{r}
+d_15000 <- ifelse(diamonds$price >= 15000, 1, 0)
+sum(d_15000)
+```
+
+Our answer is yes, there are very expensive diamonds that wort $15000 or more. 
+
+All these values we got match what we believed:
+
+The minimum value of the price data is \$386 from our summary statistics.Therefore, we expected 0 counts of diamonds smaller than \$250.
+
+The maximum value of the price is \$18823. Thus, we expected to see a value greater than 0 for diamonds of price \$15000 or greater since the distribution histogram shows some diamonds are far on the right of the price distribution tail.
+
+
+## Exploration of Histogram's Peak
+
+Now, that we explored our ranges on the price data. Let's analyze our peak value in the distribution.
+
+We can zoom in to the range of the highest peaks in the distribution. This range goes from our lowest value 386 to 1250. In order to see our full range and the values next to them, we will choose a range from 300 to 1500. Then, we can actually move our binwidth until we find a value that allows to judge the plot.
+
+```{r}
+qplot(x = price, data = subset(diamonds, !is.na(price)), 
+  binwidth = 100,
+  color = I('black'), fill = I('#099DD9'),
+  xlab = 'Price',
+  ylab = 'Number of Diamonds') +
+  coord_cartesian(xlim = c(300, 1500)) +
+  scale_x_continuous(breaks = seq(0,1500,100))
+```
+
+After zooming in the peaks, we chose a bindwidth of size 100 and we were able to clearly see that between 550 and 850 is where we find the greater number of diamonds. The highest range is 650, 750. 
+
+We can also see that there are almost no diamonds sold from the range 386 to 400, and 1450 to 1500.
+
+However, it will be great to know the exact price of the highest number of diamonds. We will need to zoom in even further in our range.
+
+```{r}
+qplot(x = price, data = subset(diamonds, !is.na(price)), 
+  binwidth = 15,
+  color = I('black'), fill = I('#099DD9'),
+  xlab = 'Price',
+  ylab = 'Number of Diamonds') +
+  coord_cartesian(xlim = c(550, 850)) +
+  scale_x_continuous(breaks = seq(0,850,15))
+```
+
+After zooming in more, we didn't get a decent distribution, but we can find a finer max range in the histogram and it goes from \$696.5 to \$712.5. This narrows down our value and we can continue narrowing it down until we find a specific value, but we decided to say the range is good enough.
+
+What we can say about diamonds is that once we found the highest peak it actually means that the cheapest diamonds are more common and among those cheapest diamonds, the ones on the range of \$695.5, \$712.5 are the most common diamonds to find. So if you are expecting to buy a diamond, you might have a good chance to get one as long as you carry \$720 on your pocket.
+
+
+
+
+
+##
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+**Note:** The `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
