@@ -144,10 +144,73 @@ After zooming in more, we didn't get a decent distribution, but we can find a fi
 What we can say about diamonds is that once we found the highest peak it actually means that the cheapest diamonds are more common and among those cheapest diamonds, the ones on the range of \$695.5, \$712.5 are the most common diamonds to find. So if you are expecting to buy a diamond, you might have a good chance to get one as long as you carry \$720 on your pocket.
 
 
+## Diamond Cut and Price
 
+At this point we might want to find the cut distributions related to the price of a diamond. We know that we have 5 types of cuts, so we are going to plot 5 histograms.
 
+```{r cut and price}
+qplot(x = price, data = subset(diamonds, !is.na(price)),
+      binwidth = 1000,
+      color = I('black'), fill = I('#099DD9'),
+    xlab = 'Price',
+    ylab = 'Number of Diamonds') +
+  facet_wrap(~cut, ncol = 2, scales = 'free_y')
+```
+
+We can see that the distributions look quiet similar, except for the fair cut which seems closer to normal. However, all distributions are right-skewed and long-tailed including fair cut. Their peaks also are on the left side, meaning that the lowest priced diamonds are more common for all cuts. Although, fair and good cut diamonds are rarer than all other cut diamonds, and fair cut being the rarest of all.
+
+We can perform summary statistics to know more about each distributions
+
+```{r}
+by(diamonds$price, diamonds$cut, summary)
+```
+
+After our summary statistics we can say that:
+The Premium cut has the highest priced diamond.
+The Premium and Ideal cut have the lowest priced diamond.
+The Ideal cut has the lowest median priced diamond.
+
+Thus, we can find that Premium cut has the highest and lowest priced diamonds, intersting isn't it? It might be that the premium and ideal cut are making cheaper diamonds rise their price, but not enough to pass the lowest priced diamonds with Fair, Good and Very Good cut.
+
+## Price per Carat and Cut
+
+Once we got familiar with the price and cut distributions, we can think of the carat of a diamond and the price together. It might be good to get the price per carat distribution and then separate such distribution on the different cut types.
+
+```{r}
+qplot(x = price/carat, data = subset(diamonds, !is.na(price)),
+      binwidth = 300 ,
+      color = I('black'), fill = I('#099DD9'),
+      xlab = 'Price per Carat',
+      ylab = 'Number of Diamonds')
+```
+
+Our distribution of price per carat shows that we are right-skewed. We are close to be a normal distribution. We should try the log10 and see if we actually get a normal distribution.
+
+```{r}
+qplot(x = price/carat, data = subset(diamonds, !is.na(price)),
+      binwidth = 0.1 ,
+      color = I('black'), fill = I('#099DD9'),
+      xlab = 'Log Scale Price per Carat',
+      ylab = 'Number of Diamonds') +
+  scale_x_log10()
+```
+
+After applying the log10 we got normal distribution. Now, it is time to split this normal distribution in each cut.
+
+```{r}
+qplot(x = price/carat, data = subset(diamonds, !is.na(price)),
+      binwidth = 0.08 ,
+      color = I('black'), fill = I('#099DD9'),
+      xlab = 'Log Scale Price per Carat',
+      ylab = 'Number of Diamonds') +
+  scale_x_log10() +
+  facet_wrap(~cut, ncol = 2, scales = 'free_y')
+```
+
+After splitting the dsitribution in cut types, we noticed that the Very Good cut has a slight bimodal distribution while other cuts are very clode to normal dsitributions.
 
 ##
+
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
