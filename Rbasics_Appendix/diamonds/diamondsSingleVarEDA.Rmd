@@ -237,12 +237,58 @@ E: [882, 4003], IQR 3121
 
 While for J (worst color) the [1st, 3rd] quartiles and IQR are [1860, 7695] and 5835, respectively.
 
-## 
+We can also check the distribution of price per carat and color to check for other quality.
 
-##
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+qplot(x = color, y = price/carat, data = subset(diamonds, !is.na(price)),
+      geom = 'boxplot', 
+      ylab = 'Price per Carat') +
+  scale_y_log10()
 ```
 
-**Note:** The `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The plot helped us to confirm what we had concluded from our data.
+
+## Diamonds Weights (Carat) 
+
+Since we have explored the prices of diamonds per carat and also their color and cuts, we will analyze the carat of diamonds.
+
+```{r}
+qplot(x = carat, data = subset(diamonds, !is.na(carat)),
+      binwidth = 0.1,
+      geom = 'freqpoly', color = carat,
+      xlab = 'Carat',
+      ylab = 'Number of Diamonds') +
+  scale_x_continuous(breaks = seq(0,2.6,0.1)) +
+  coord_cartesian( xlim = c(0,2.6))
+```
+
+In the frequency polygon plot, we can see that the most common carat is 0.3 and that after 1 carat the diamonds are rarer. In fact, diamonds with carat greater than 2.6 are almost inexistent.
+
+Now, we should ask ourselves if all color of diamond have a similar carat distribution. In order to determine the carat distribution per color, we can plot the frequency polygon of all color and carats.
+
+```{r}
+qplot(x = carat, data = subset(diamonds, !is.na(carat)),
+      binwidth = 0.2,
+      geom = 'freqpoly', color = color,
+      xlab = 'Carat',
+      ylab = 'Number of Diamonds') +
+  scale_x_continuous(breaks = seq(0,2.6,0.2)) +
+  coord_cartesian(xlim = c(0,2.6))
+```
+
+The plot above show us that all colors have a similar frequency polygon for carats. 
+
+Let's follow our curiosity and check if the cut and carat for all diamonds show similar frequency polygons. 
+
+```{r}
+qplot(x = carat, data = subset(diamonds, !is.na(carat)),
+      binwidth = 0.2,
+      geom = 'freqpoly', color = cut,
+      xlab = 'Carat',
+      ylab = 'Number of Diamonds') +
+  scale_x_continuous(breaks = seq(0,2.6,0.2)) +
+  coord_cartesian(xlim = c(0,2.6))
+```
+
+The plot above shows that Ideal cut is done for most cheap diamonds, and fair cuts are the rarest.
+
