@@ -207,7 +207,37 @@ qplot(x = price/carat, data = subset(diamonds, !is.na(price)),
   facet_wrap(~cut, ncol = 2, scales = 'free_y')
 ```
 
-After splitting the dsitribution in cut types, we noticed that the Very Good cut has a slight bimodal distribution while other cuts are very clode to normal dsitributions.
+After splitting the dsitribution in cut types, we noticed that the Very Good cut has a slight bimodal distribution while other cuts are very clode to normal distributions.
+
+Let's look at these distributions using boxplots to confirm what we saw in the histograms.
+
+```{r}
+qplot(x = cut , y = price/carat, 
+      data = subset(diamonds, !is.na(price)),
+      geom='boxplot') +
+  scale_y_log10()
+```
+
+After looking at the box plots, we can tell that the distributions seem normal, including the Very Good cut. However, we know that the Very Good cut has a slight bimodal distribution. We can also confirm that the Fair cut is the rarest cut on diamonds and also the most normal distributions.
+
+## Price and Color
+
+After we found some characteristics of price and cuts, we will now check price and color of diamonds.
+
+```{r}
+by(diamonds$price, diamonds$color, summary)
+
+qplot(x = color, y = price, data = subset(diamonds,!is.na(price)),
+      geom = 'boxplot')
+```
+
+Something interesting about diamonds can be seen in the boxplot. The best diamonds color D has more outliers than most of the other colors and its distribution shows that on average it has the second lowest price. For the color E it turns out it has the most outliers and the lowest average price. In fact, color D and E [1st, 3rd] quartiles and IQR are:
+D: [911, 4214], IQR 3303
+E: [882, 4003], IQR 3121
+
+While for J (worst color) the [1st, 3rd] quartiles and IQR are [1860, 7695] and 5835, respectively.
+
+## 
 
 ##
 
