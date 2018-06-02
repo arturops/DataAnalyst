@@ -42,31 +42,78 @@ Our previous graph was overplotted, meaning that point overlap to each other mak
 
 ```{r Overplotting}
 ggplot(aes(x = age, y = friend_count), data = pf) +
-  geom_point(alpha = 1/10) +
+  geom_point(alpha = 1/20) +
   xlim(13,90)
 ```
 
 #### What do you notice in the plot?
 We can tell righ away that the darker part of the plot lives on the bottom, which means that most of our data is below 1000 friend counts. This matches our first observation, but now it is very clear to see it.
 
+
+We can also use ```geom_jitter()``` instead of ```geom_point()``` to find trends easily and how the data disperses.
+
+```{r jitter}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_jitter(alpha = 1/20) +
+  xlim(13,90)
+```
 ***
 
+Something we noticed in this new plot is how the data diffuses from condensed mass to less points. This also can help to see trends.
+
 ### Coord_trans()
-Notes:
+We might want to understand our data better, and for that we can apply a transform to ages (x axis) and separate for friend_count (y axis). In this case we will do a square root transformation to it. This can be achieved using ```coord_trans()```.
 
+We will first do this using ```geom_point()``` and then we will use the parameter ```position``` to set a jitter. To avoid warnings caused by ```xlim``` we use ```coord_cartesian``` to clip the x axis without eliminating all our data outside the clip.
+
+First let's do it for age
 ```{r Coord_trans()}
-
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20) +
+  coord_trans(x = 'sqrt') +
+  coord_cartesian(xlim = c(13,90))
 ```
 
-#### Look up the documentation for coord_trans() and add a layer to the plot that transforms friend_count using the square root function. Create your plot!
+Then, let's try it for friend_count
 
-```{r}
+```{r Coord_trans()}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20) +
+  coord_cartesian(xlim = c(13,90)) +
+  coord_trans(y = 'sqrt')
+```
 
+Now, let's add jitter to age using ```position = position_jitter(h = 0)```. This syntax prevent us to use negative values from age (if any), this way we do not calculate values that make no sense for our friends count.
+
+```{r jitter coord_trans()}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20, position = position_jitter(h = 0)) +
+  coord_trans(x = 'sqrt') +
+  coord_cartesian(xlim = c(13,90)) 
+
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20, position = position_jitter(h = 0)) +
+  coord_cartesian(xlim = c(13,90)) +
+  coord_trans(y = 'sqrt')
+```
+
+**Note:** There is another way to set an axis scale to be ```sqrt``` and we can do it using ```scale_x_sqrt()``` and ```scale_y_sqrt()``` as follow:
+
+```
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20) +
+  coord_cartesian(xlim = c(13,90)) +
+  scale_x_sqrt() +
+  scale_y_sqrt()
 ```
 
 #### What do you notice?
 
-***
+After transforming the data we noticed that:
+
+* x axis transformation shows almost no difference from what we had before, so the dsitribution doesn't change much.
+
+* y axis transformation shows our data shifting up for older ages. This actually helps to refine what we believed about our data. Meaning that we can now know that from older ages there are almost no people with less than 50 friends.
 
 ### Alpha and Jitter
 Notes:
