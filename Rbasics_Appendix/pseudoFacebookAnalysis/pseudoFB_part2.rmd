@@ -1,0 +1,276 @@
+R course Lesson 4 - Pseudo Facebook
+========================================================
+
+We will continue the effort of understanding the audience perceived. In the previous analysis we understood our data and found that women tend to have more likes and friends compared to men. However, men initiate more friendships. In this exercise, we dive into the audience analysis.
+
+### Scatterplots and Perceived Audience Size
+
+We can start using scatter plots to compare relations on two variables data.
+We will review the age and number of friends.
+
+
+```{r Scatterplots}
+library(ggplot2)
+
+# Check current path
+path <- getwd()
+
+# Set path to dataset
+path <- setwd('~/github/DataAnalyst/Rbasics_Appendix/pseudoFacebookAnalysis/')
+
+file <- 'pseudo_facebook.tsv'
+
+pf <- read.csv(file, sep = '\t')
+
+qplot(x = age, y = friend_count, data = pf)
+
+```
+
+We can tell that young people have more friends and that most likely the people over 60 who has a lot of friends might be people who fake their age. Based on our observation, this people who faked their age might be teengers as that part of our sample has a similar number count of friend.
+
+**Note:** Another way to plot data using ```ggplot``` is:
+```{r ggplot Syntax}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point() +
+  xlim(13,90) # clips the plot from 13 to 90
+```
+We clipped the plot above from 13 to 90 years old based on our observations of the first plot with ```qplot```
+***
+
+### Overplotting
+Our previous graph was overplotted, meaning that point overlap to each other making it difficult for us to see it. We can use the ```alpha``` parameter inside ```geom_point()``` to make points clearer and the more that get stack over each other the stronger the color. 
+
+```{r Overplotting}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/10) +
+  xlim(13,90)
+```
+
+#### What do you notice in the plot?
+We can tell righ away that the darker part of the plot lives on the bottom, which means that most of our data is below 1000 friend counts. This matches our first observation, but now it is very clear to see it.
+
+***
+
+### Coord_trans()
+Notes:
+
+```{r Coord_trans()}
+
+```
+
+#### Look up the documentation for coord_trans() and add a layer to the plot that transforms friend_count using the square root function. Create your plot!
+
+```{r}
+
+```
+
+#### What do you notice?
+
+***
+
+### Alpha and Jitter
+Notes:
+
+```{r Alpha and Jitter}
+
+```
+
+***
+
+### Overplotting and Domain Knowledge
+Notes:
+
+***
+
+### Conditional Means
+Notes:
+
+```{r Conditional Means}
+
+```
+
+Create your plot!
+
+```{r Conditional Means Plot}
+
+```
+
+***
+
+### Overlaying Summaries with Raw Data
+Notes:
+
+```{r Overlaying Summaries with Raw Data}
+
+```
+
+#### What are some of your observations of the plot?
+Response:
+
+***
+
+### Moira: Histogram Summary and Scatterplot
+See the Instructor Notes of this video to download Moira's paper on perceived audience size and to see the final plot.
+
+Notes:
+
+***
+
+### Correlation
+Notes:
+
+```{r Correlation}
+
+```
+
+Look up the documentation for the cor.test function.
+
+What's the correlation between age and friend count? Round to three decimal places.
+Response:
+
+***
+
+### Correlation on Subsets
+Notes:
+
+```{r Correlation on Subsets}
+with(                 , cor.test(age, friend_count))
+```
+
+***
+
+### Correlation Methods
+Notes:
+
+***
+
+## Create Scatterplots
+Notes:
+
+```{r}
+
+```
+
+***
+
+### Strong Correlations
+Notes:
+
+```{r Strong Correlations}
+
+```
+
+What's the correlation betwen the two variables? Include the top 5% of values for the variable in the calculation and round to 3 decimal places.
+
+```{r Correlation Calcuation}
+
+```
+
+Response:
+
+***
+
+### Moira on Correlation
+Notes:
+
+***
+
+### More Caution with Correlation
+Notes:
+
+```{r More Caution With Correlation}
+install.packages('alr3')
+library(alr3)
+```
+
+Create your plot!
+
+```{r Temp vs Month}
+
+```
+
+***
+
+### Noisy Scatterplots
+a. Take a guess for the correlation coefficient for the scatterplot.
+
+b. What is the actual correlation of the two variables?
+(Round to the thousandths place)
+
+```{r Noisy Scatterplots}
+
+```
+
+***
+
+### Making Sense of Data
+Notes:
+
+```{r Making Sense of Data}
+
+```
+
+***
+
+### A New Perspective
+
+What do you notice?
+Response:
+
+Watch the solution video and check out the Instructor Notes!
+Notes:
+
+***
+
+### Understanding Noise: Age to Age Months
+Notes:
+
+```{r Understanding Noise: Age to Age Months}
+
+```
+
+***
+
+### Age with Months Means
+
+```{r Age with Months Means}
+
+```
+
+Programming Assignment
+```{r Programming Assignment}
+
+```
+
+***
+
+### Noise in Conditional Means
+
+```{r Noise in Conditional Means}
+
+```
+
+***
+
+### Smoothing Conditional Means
+Notes:
+
+```{r Smoothing Conditional Means}
+
+```
+
+***
+
+### Which Plot to Choose?
+Notes:
+
+***
+
+### Analyzing Two Variables
+Reflection:
+
+***
+
+Click **KnitHTML** to see all of your hard work and to have an html
+page of this lesson, your answers, and your notes!
+
