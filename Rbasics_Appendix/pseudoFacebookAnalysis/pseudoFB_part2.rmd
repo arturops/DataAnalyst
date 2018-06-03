@@ -235,24 +235,23 @@ Now that we zoomed in, we can see that on average people from ages between 20 an
 
 ***
 
-### Moira: Histogram Summary and Scatterplot
-See the Instructor Notes of this video to download Moira's paper on perceived audience size and to see the final plot.
-
-Notes:
-
-***
-
 ### Correlation
-Notes:
+We can find the correlation on age versus friend count using ```cor.test()```, which by default uses preason coefficient.
 
 ```{r Correlation}
-
+r <- cor.test(x = pf$age, y = pf$friend_count)
+r
 ```
 
-Look up the documentation for the cor.test function.
+Looking at the correlation coefficient -0.274, we can tell age and friend count have no correlation since the coefficient value is close to 0. A rule of thumb is that if the coefficient is -0.3 or 0.3 the correlation is low, if it is [-0.5,-0.3) or (0.3, 0.5] it is moderate and if it is [-1,-0.7] or [0.7,1] the correlation is high.
 
-What's the correlation between age and friend count? Round to three decimal places.
-Response:
+There is another way to calculate this coefficient using ```with()```
+
+```{r with}
+with(pf, cor.test(age, friend_count, method = 'pearson'))
+```
+
+This method gave us as expected the same value that using ```cor.test()``` alone will return.
 
 ***
 
