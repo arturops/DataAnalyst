@@ -278,10 +278,10 @@ ggplot(aes(x = www_likes_received, y = likes_received), data = pf) +
 
 We can clearly see there are a couple of large values which can be good outliers or bad data. At least for now, we want to zoom in to the part where more points live.
 
-```{r}
+```{r Zoom in Likes}
 ggplot(aes(x = www_likes_received, y = likes_received), data = pf) +
   geom_point(alpha = 1/20, color = 'blue') +
-  coord_cartesian(xlim = c(0, 10000), ylim =c(0,30000))
+  coord_cartesian(xlim = c(0, 5000), ylim =c(0,10000))
 ```
 
 We can see the points are close to follow a straight line, and this might be an indicative of strong positive correlation.
@@ -289,19 +289,24 @@ We can see the points are close to follow a straight line, and this might be an 
 ***
 
 ### Strong Correlations
-Notes:
+At this point, we think there is a correlation in our web likes and the likes received. Let's explore more our scatter plot using the 95% quantile in both axis. We can also use ```geom_smooth()``` to create a line across our points.
 
 ```{r Strong Correlations}
-
+ggplot(aes(x = www_likes_received, y = likes_received), data = pf) +
+  geom_point(alpha = 1/20, color = 'blue') +
+  coord_cartesian(xlim=c(0,quantile(pf$www_likes_received, 0.95)),
+                  ylim=c(0,quantile(pf$likes_received, 0.95))) +
+  geom_smooth(method = 'lm', linetype = 2, color = 'black')
 ```
 
-What's the correlation betwen the two variables? Include the top 5% of values for the variable in the calculation and round to 3 decimal places.
+We zoomed in and we can see the straight line is in the middle of the point, however the points seem very disperse. This might indicate the correlation is not perfect, but definitively positive. Let's calculate it and find how strong it is.
 
+What's the correlation betwen the two variables? 
 ```{r Correlation Calcuation}
-
+with(pf, cor.test(x = www_likes_received, y = likes_received))
 ```
 
-Response:
+Our correlation coefficient is actually close to 1 with a value of 0.948 if we round it up. This indicates a positive strong correlation. In fact, we expected that as web likes received is a subset of the total likes received. This helped us to understand how a strong correlation might look like in a scatter plot.
 
 ***
 
