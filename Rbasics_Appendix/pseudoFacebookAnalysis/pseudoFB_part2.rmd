@@ -310,44 +310,65 @@ Our correlation coefficient is actually close to 1 with a value of 0.948 if we r
 
 ***
 
-### Moira on Correlation
-Notes:
 
-***
 
-### More Caution with Correlation
-Notes:
+### Caution with Correlation (Different dataset)
+
+Now we will use a different dataset, the Mitchell soil temperature dataset. This dataset is part of a package named ```alr3```. Let's install the package and load our dataset.
 
 ```{r More Caution With Correlation}
-install.packages('alr3')
+#install.packages('alr3')
 library(alr3)
+
+# loads dataset
+data(Mitchell)
+
+# gives us the columns of dataset
+str(Mitchell)
+
+# shows documentation of dataset
+?Mitchell
 ```
 
-Create your plot!
+Let's plot the two variables month and temperature using a scatter plot
 
 ```{r Temp vs Month}
-
+ggplot(aes(y = Temp, x = Month), data = Mitchell) +
+  geom_point(alpha = 1/4, color = 'blue')
 ```
 
 ***
+
+Once we have plotted our variables, we will do some guesses of our correlation and compute the correlation coefficient.
 
 ### Noisy Scatterplots
 a. Take a guess for the correlation coefficient for the scatterplot.
+From the plot it seems the correlation is very low so I would be tempted to say it is close to 0.
 
 b. What is the actual correlation of the two variables?
-(Round to the thousandths place)
+
 
 ```{r Noisy Scatterplots}
-
+with(Mitchell, cor.test(x = Month, y = Temp))
 ```
+
+The actual correlation coefficient is 0.058 (rounded), that is close to our guess, but is it correct? Shouldn't temperature per month should have some correlation ?
 
 ***
 
 ### Making Sense of Data
-Notes:
+
+After observing the plot and our results, we decided to question them and we realized the months keep increasing from 0 to around 200. Maybe we should make the months to be only from 1 to 12 and every new year we need to match what temperatures belong to which month from 1 to 12.
+
+Let's start first braking our data in a 12 months increment visualization 
 
 ```{r Making Sense of Data}
+plot_range_x <- range(Mitchell$Month)
+plot_range_x
 
+ggplot(aes(x = Month, y = Temp), data = Mitchell) +
+  geom_point(alpha = 1/4, color = 'blue') +
+  scale_x_continuous(breaks = seq(plot_range_x[1] ,plot_range_x[2], 12))
 ```
 
 ***
