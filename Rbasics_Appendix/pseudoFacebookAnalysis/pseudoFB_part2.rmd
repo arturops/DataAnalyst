@@ -375,16 +375,25 @@ ggplot(aes(x = Month, y = Temp), data = Mitchell) +
 
 ### A New Perspective
 
-What do you notice?
-Response:
+Let's stretch our graph making the y axis very short and the x axis as longer as we can.
 
-Watch the solution video and check out the Instructor Notes!
-Notes:
+What do you notice?
+The new point of view makes graph look like a sine wave, we have a consistent up and down pattern. The pearson coefficient will never catch that relation of the data as it looks for linear relations of it.
+
+In order to see this pattern easily, we need all our points in only a 12 months division. We can use the modulus operator ```%%``` over our month data to plot a graph that shows the up and down of temperature over a year.
+
+```{r}
+ggplot(aes(x=(Month%%12),y=Temp), data=Mitchell)+
+  geom_point()
+```
+
+This teach us that data can look like there is no relation, but you need to make sense of it changing perspective and using what you know about it. This time we knew Nebraska has seasons every year, so there should be some sort of pattern.
 
 ***
 
 ### Understanding Noise: Age to Age Months
-Notes:
+
+Let's get back to our pseudo facebook dataset. 
 
 ```{r Understanding Noise: Age to Age Months}
 
