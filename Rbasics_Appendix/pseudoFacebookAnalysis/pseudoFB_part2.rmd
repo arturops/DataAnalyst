@@ -243,7 +243,7 @@ r <- cor.test(x = pf$age, y = pf$friend_count)
 r
 ```
 
-Looking at the correlation coefficient -0.274, we can tell age and friend count have no correlation since the coefficient value is close to 0. A rule of thumb is that if the coefficient is -0.3 or 0.3 the correlation is low, if it is [-0.5,-0.3) or (0.3, 0.5] it is moderate and if it is [-1,-0.7] or [0.7,1] the correlation is high.
+Looking at the correlation coefficient -0.0274, we can tell age and friend count have no correlation since the coefficient value is close to 0. A rule of thumb is that if the coefficient is -0.3 or 0.3 the correlation is low, if it is [-0.5,-0.3) or (0.3, 0.5] it is moderate and if it is [-1,-0.7] or [0.7,1] the correlation is high.
 
 There is another way to calculate this coefficient using ```with()```
 
@@ -256,25 +256,35 @@ This method gave us as expected the same value that using ```cor.test()``` alone
 ***
 
 ### Correlation on Subsets
-Notes:
+If we look at the zoomed in plot we can see that there is no linear correlation between our variables age and friend count. However, in our previous calculation we included all values that is the ages we didn't want to look and the reaosn why we zoomed in our scatter plot.
+
+Let's calculate the pearson coefficient for only this ```subset``` of values.
 
 ```{r Correlation on Subsets}
-with(                 , cor.test(age, friend_count))
+with( subset(pf, pf$age <=70), cor.test(age, friend_count))
 ```
 
-***
-
-### Correlation Methods
-Notes:
+Now, we got a negative weak correlation, but that indicates that while age increases the number of friends reduces. 
 
 ***
 
 ## Create Scatterplots
-Notes:
+Now, let's explore the likes received via website and how that corresponds to the total likes received. Let's make a scatter plot for this.
 
 ```{r}
-
+ggplot(aes(x = www_likes_received, y = likes_received), data = pf) +
+  geom_point(alpha = 1/20, color = 'blue')
 ```
+
+We can clearly see there are a couple of large values which can be good outliers or bad data. At least for now, we want to zoom in to the part where more points live.
+
+```{r}
+ggplot(aes(x = www_likes_received, y = likes_received), data = pf) +
+  geom_point(alpha = 1/20, color = 'blue') +
+  coord_cartesian(xlim = c(0, 10000), ylim =c(0,30000))
+```
+
+We can see the points are close to follow a straight line, and this might be an indicative of strong positive correlation.
 
 ***
 
