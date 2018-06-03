@@ -449,24 +449,36 @@ ggplot(aes(x = age_with_months, y = friend_count_mean),
 ***
 
 ### Smoothing Conditional Means
-Since our plot seems very noisy, we might want to make it smoother using 
+Since our plot seems very noisy, we might want to make it smoother using ```geom_smooth()```. In fact, let's smooth our two plots: age and age with months.
 
 ```{r Smoothing Conditional Means}
+p1 <- ggplot(aes(x = age, y = friend_count_mean), 
+             data = subset(pf.fc_by_age, age <= 70)) +
+  geom_line() +
+  geom_smooth()
+
+p2 <- ggplot(aes(x = age_with_months, y = friend_count_mean),
+             data = subset(pf.fc_by_age_months, age_with_months <= 70)) +
+  geom_line() +
+  geom_smooth()
+
+library(gridExtra)
+grid.arrange(p1,p2,ncol=1)
 
 ```
+
+We can see that both of our plots have a similar smooth function, but in both we lose the peak at 70 years old. This is a common trade-off in statistics. If we decide to make something smoother we might lose important features or data in the process.
 
 ***
 
 ### Which Plot to Choose?
-Notes:
+So we ask ourselves which plot to choose and the answer is ... you don't have to choose. In EDA all we want is to understand our data and plot several types of graphs to get an idea of what we can find and what are some insights in the data. Once you have found something, then you can start thinking what will be the best plot to create to show that finding and communicate it effectively to your peers or executives.
 
 ***
 
 ### Analyzing Two Variables
 Reflection:
+So what did we learn in this exercises?
+Well, we learned about correlation coefficients, and that the data might have hidden patterns that most be explored based on some knowledge on your data and what you think might make sense. If things still don't make sense maybe try a different perspective and methods to study your data. If after that you cannot find anything maybe you are right and there is nothing to find about such data. The main gist here was to make you understand that plotting can always help a lot, but it is not all you need.
 
-***
-
-Click **KnitHTML** to see all of your hard work and to have an html
-page of this lesson, your answers, and your notes!
 
