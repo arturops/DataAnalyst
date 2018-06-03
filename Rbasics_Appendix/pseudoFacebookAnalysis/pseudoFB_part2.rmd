@@ -179,23 +179,59 @@ head(pf.fc_by_age,10)
 
 We can see that the summary group the friend counts by age, obtained the mean, meadian and then sorted by age from smaller to greater. This is very helpful when we analyze data and want to find trends over the year or on a more organized manner.
 
-Create your plot!
+Once we have our summary data, we would like to analyze it, but looking at the table might be a bit tedious. Let's create a plot to look at our summary for the mean of friend count!
 
 ```{r Conditional Means Plot}
-
+ggplot(aes(y = friend_count_mean, x = age), data = pf.fc_by_age) +
+  geom_line()
 ```
+
+We could have used the scatter plot, but it is easier to see our trends using ```geom_line``` as it is connecting our points and displaying variations.
+
+We can tell from the plot that what we believe was right, the ages over 90, around 70, and below 20 have a spike in the friends count mean. This indicates these ages have the most friends on average.
 
 ***
 
 ### Overlaying Summaries with Raw Data
-Notes:
+Before we had created a scatter plot on all the data of friend counts per age and another plot of the mean of such data. Let's combine both plots and at the same time let's add the 10% quantile, the 90% quantile and the median. We can do all of this using the functions ```geom_point``` and ```geom_line```.
 
 ```{r Overlaying Summaries with Raw Data}
-
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20, 
+             position = position_jitter(h = 0),
+             color = 'orange') +
+  coord_trans(y = 'sqrt') +
+  geom_line(stat = 'summary', fun.y = mean) +
+  geom_line(stat = 'summary', fun.y = quantile, fun.args = list(probs = 0.1),
+            linetype = 2, color = 'blue') +
+  geom_line(stat = 'summary', fun.y = median,
+            color = 'blue') +
+  geom_line(stat = 'summary', fun.y = quantile, fun.args = list (probs = 0.9),
+            linetype = 2, color = 'blue')
+  
 ```
 
 #### What are some of your observations of the plot?
-Response:
+ We can see that the median is very close to our mean and they follow the same trend. This confirms some of our assumptions if we were to use the median.
+ Also, the 10% quantile shows that the older people get the more friends the have, while the 90% quantile clearly show the highest peaks as dominant. This also means that having more than 1000 friends is very rare.
+ 
+ We can zoom in to our graph using ```coord_cartesian(xlim = c(a,b), ylim =c(a,b))``` where ```a``` means lower bound and ```b``` upper bound.
+
+```{r Zoom in Summaries Plots}
+ggplot(aes(x = age, y = friend_count), data = pf) +
+  geom_point(alpha = 1/20, position = position_jitter(h=0),
+             color = 'orange') +
+  coord_trans(y = 'sqrt') +
+  geom_line(stat = 'summary', fun.y = mean) +
+  geom_line(stat = 'summary', fun.y = quantile, fun.args = list(probs = 0.1),
+            linetype = 2, color = 'blue') +
+  geom_line(stat = 'summary', fun.y = median, color = 'blue') +
+  geom_line(stat = 'summary', fun.y = quantile, fun.args = list(probs = 0.9),
+            linetype = 2, color = 'blue') +
+  coord_cartesian(xlim = c(13,70), ylim = c(0,1000))
+```
+
+Now that we zoomed in, we can see that on average people from ages between 20 and 60 years old have less than 200 friends.
 
 ***
 
