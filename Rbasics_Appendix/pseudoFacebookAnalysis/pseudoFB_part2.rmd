@@ -393,37 +393,63 @@ This teach us that data can look like there is no relation, but you need to make
 
 ### Understanding Noise: Age to Age Months
 
-Let's get back to our pseudo facebook dataset. 
+Let's get back to our pseudo facebook dataset. Remember the plot of friend count mean grouped by age.
 
 ```{r Understanding Noise: Age to Age Months}
-
+ggplot(aes(x = age, y = friend_count_mean), data = pf.fc_by_age) +
+  geom_line()
 ```
 
 ***
 
 ### Age with Months Means
 
+All we have in the previous plot is a lot of spikes which might be because we decided to make the age be determined by year, maybe we can make a smoother graph if we measure age by years and months. Let's do that and see if our graph gets smoother.
+
+**Note:** We need to assume that December 31 is the date reference to calculate age. Meaning that you should imagine our date is December 31, from here we decide the month decimal point of a person's age. Example if someone is 10 years old and was born in October, it means that to December 31 this person actually has age of 10 years old and 2/12 months. As the person just got a birthday in October and only 2 months have passed since then.
+
 ```{r Age with Months Means}
-
+pf$age_with_months <- pf$age + ((12 - pf$dob_month)/12)
 ```
 
-Programming Assignment
-```{r Programming Assignment}
+Since we computed the ages of every person including their months, let's get a dataframe that uses such age to group our data. We can also get the mean, median and numbe rof elements for each age with months group.
 
+```{r Age with Months Dataframe}
+# group
+age_months_groups <- group_by(pf,age_with_months)
+
+# create dataframe
+pf.fc_by_age_months <- summarise(age_months_groups,
+                                 friend_count_mean = mean(friend_count),
+                                 friend_count_median = median(friend_count),
+                                 n = n())
+
+# arrange by ages with month
+pf.fc_by_age_months <- arrange(pf.fc_by_age_months, age_with_months)
+
+# show 10 elements from head
+head(pf.fc_by_age_months, 10)
 ```
+
+Once we have this new dataframe we can do more work with it.
 
 ***
 
 ### Noise in Conditional Means
 
-```{r Noise in Conditional Means}
+Let's plot our data to start exploring it. However, let's keep our observations from before, meaning that people above 70 have a rare behavior and we rather leave them out of this.
 
+```{r Noise in Conditional Means}
+ggplot(aes(x = age_with_months, y = friend_count_mean), 
+       data = subset(pf.fc_by_age_months, age_with_months <= 70)) +
+  geom_line()
+  
 ```
 
 ***
 
 ### Smoothing Conditional Means
-Notes:
+Since our plot seems very noisy, we might want to make it smoother using 
 
 ```{r Smoothing Conditional Means}
 
