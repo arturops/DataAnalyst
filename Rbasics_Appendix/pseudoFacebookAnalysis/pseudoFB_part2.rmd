@@ -116,25 +116,68 @@ After transforming the data we noticed that:
 * y axis transformation shows our data shifting up for older ages. This actually helps to refine what we believed about our data. Meaning that we can now know that from older ages there are almost no people with less than 50 friends.
 
 ### Alpha and Jitter
-Notes:
+
+As additional practice, we will examine the relationship between friendships_initiated (y) and age (x) using the ggplot.
 
 ```{r Alpha and Jitter}
-
+ggplot(aes(x = age, y = friendships_initiated), data = pf) +
+  geom_jitter(alpha = 1/10)
 ```
 
-***
+We noticed that the plot shows people over 90 years old initiated a lot of friendships, that seems odd. Also around 70 years old we have this behavior. It might be a good idea to apply a transformation to our friendship initiated data and see if we find a pattern. 
 
-### Overplotting and Domain Knowledge
-Notes:
+```{r second friendships_initiated}
+ggplot(aes(x = age, y = friendships_initiated ), data = pf) +
+  geom_point(alpha = 1/20, position = position_jitter(h = 0)) +
+  coord_trans( y = 'sqrt')
+```
+
+Once we did the transformation, we can see the high density areas that correspond to the most common counts of friendships started for a specific age group.
 
 ***
 
 ### Conditional Means
-Notes:
+If we need to analyze datasets, R has a package named ```dplyr``` which allow us to do more with our dataset.
+
+Let's try to use the friend count data and group it by age. Then, let's make a table of groups and their mean and median.
 
 ```{r Conditional Means}
+#install.packages('dplyr')
+library(dplyr)
+
+# group by age
+age_groups <- group_by(pf, age)
+
+# create table of age groups, number of elements (n()), mean, and median
+pf.fc_by_age <- summarise(age_groups,
+                          friend_count_mean = mean(friend_count),
+                          friend_count_median = median(friend_count),
+                          n = n())
+
+# arrange summary by age
+pf.fc_by_age <- arrange(pf.fc_by_age, age)
+
+# show 10 elements from head
+head(pf.fc_by_age, 10)
 
 ```
+
+We can also use a different notation to do the previous analysis. This will be similar to cascading command one another (similar to pipes in linux command line), for this we use the symbol ```%.%``` or in newest versions of dplyr ```%>%```.
+
+```{r Conditional Means Alternative}
+
+pf.fc_by_age <- pf %>%
+                  group_by(age) %>%
+                  summarise(friend_count_mean = mean(friend_count),
+                            friend_count_median = median(friend_count),
+                            n = n()) %>%
+                                    arrange(age)
+
+head(pf.fc_by_age,10)
+
+```
+
+We can see that the summary group the friend counts by age, obtained the mean, meadian and then sorted by age from smaller to greater. This is very helpful when we analyze data and want to find trends over the year or on a more organized manner.
 
 Create your plot!
 
