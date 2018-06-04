@@ -1,4 +1,4 @@
-R course Lesson 3 - Pseudo Facebook
+R course Part 1 - Pseudo Facebook
 ========================================================
 
 [Dataset](https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseudo_facebook.tsv) taken from Udacity R course lesson 3

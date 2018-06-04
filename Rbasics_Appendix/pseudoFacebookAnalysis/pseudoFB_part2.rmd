@@ -1,4 +1,4 @@
-R course Lesson 4 - Pseudo Facebook
+R course Part 2 - Pseudo Facebook
 ========================================================
 
 We will continue the effort of understanding the audience perceived. In the previous analysis we understood our data and found that women tend to have more likes and friends compared to men. However, men initiate more friendships. In this exercise, we dive into the audience analysis.
