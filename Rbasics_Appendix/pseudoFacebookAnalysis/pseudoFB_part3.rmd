@@ -1,22 +1,41 @@
 R course Part 3 - Pseudo Facebook
 ========================================================
 
-### Multivariate Data
-Notes:
+In part 3 of our pseudofacebook dataset analysis we will explore more than 2 variables at a time.
 
-***
+```{r Load Data}
+# Check current path
+path <- getwd()
 
-### Moira Perceived Audience Size Colored by Age
-Notes:
+# Set path to dataset
+path <- setwd('~/github/DataAnalyst/Rbasics_Appendix/pseudoFacebookAnalysis/')
 
-***
+file <- 'pseudo_facebook.tsv'
+
+pf <- read.csv(file, sep = '\t')
+
+# load ggplot
+library(ggplot2)
+
+```
 
 ### Third Qualitative Variable
-Notes:
+
+Let's start exploring our age distributions by gender, we can create a boxplot for each gender. We can identify the mean in the box plot using ```stat_summary(fun.y=mean, geom = 'point', shape=4)```, where the shape being 4 is the x symbol, and the geom = point marks the mean only as a point.
+
+Another graph we can do is the age and gender count using the median as the measure of center.
 
 ```{r Third Qualitative Variable}
+# Age by gender boxplots
 ggplot(aes(x = gender, y = age),
-       data = subset(pf, !is.na(gender))) + geom_histogram()
+       data = subset(pf, !is.na(gender))) + 
+  geom_boxplot() +
+  stat_summary(fun.y = mean, geom = 'point', shape = 4)
+
+# graph of friend count by gender
+ggplot(aes(x = age, y = friend_count),
+       data = subset(pf, !is.na(gender))) +
+  geom_line(aes(color = gender), stat = 'summary', fun.y = median)
 ```
 
 ***
