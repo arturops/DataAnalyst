@@ -38,13 +38,59 @@ ggplot(aes(x = age, y = friend_count),
   geom_line(aes(color = gender), stat = 'summary', fun.y = median)
 ```
 
+Let's now create a dataframe that groups our users by age and gender to obtain the mean of friend count, median of friend count and members of each group.
+
+```{r}
+library(dplyr)
+
+# filter instead of using subset inside group_by()
+pf_filter_gender <- filter(pf,!is.na(gender))
+
+# group by age and gender
+age_gender_group <- group_by(pf_filter_gender, age, gender)
+
+# summarise the data in a dataframe
+pf.fc_by_age_gender <- summarise(age_gender_group,
+                                 mean_friend_count = mean(friend_count),
+                                 median_friend_count = median(friend_count),
+                                 n = n())
+
+# removes grouping (when using group_by 2 or more variables, operations will be constrained to groups, we need to remove this constrain)
+pf.fc_by_age_gender <- ungroup(pf.fc_by_age_gender)
+
+pf.fc_by_age_gender <- arrange(pf.fc_by_age_gender,age)
+
+head(pf.fc_by_age_gender, 10)
+```
+
+An alternative way to obtain the same dataframe is using ```%>%```
+
+```{r}
+
+pf.fc_by_age_gender <- pf %>%
+                        filter(!is.na(gender)) %>%
+                        group_by(age, gender) %>%
+                        summarise(mean_friend_count = mean(friend_count),
+                                  median_friend_count = median(friend_count),
+                                  n = n()) %>%
+                        ungroup() %>%
+                        arrange(age)
+        
+
+head(pf.fc_by_age_gender, 10)
+
+```
+
+
 ***
 
 ### Plotting Conditional Summaries
-Notes:
+
+After we consolidated our dataframe we can use it to plot the median of friend count per gender and age.
 
 ```{r Plotting Conditional Summaries}
-
+ggplot(aes(x = age, y = median_friend_count), data = pf.fc_by_age_gender) +
+  geom_line(aes(color = gender) )
 ```
 
 ***
