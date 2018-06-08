@@ -106,11 +106,29 @@ Notes:
 ***
 
 ### Reshaping Data
-Notes:
+Let's reshape median_friend_count data so that the gender is split in a wide view of the data, meaning that gender column will be left out and we will have columns female and male. We can do this using ```reshape2``` library.
 
 ```{r}
 install.packages('reshape2')
 library(reshape2)
+
+pf.fc_by_age_gender.wide <- dcast(pf.fc_by_age_gender,
+                                  age ~ gender,
+                                  value.var = 'median_friend_count')
+
+head( pf.fc_by_age_gender.wide,10)
+```
+
+Analternative way of reshaping our data is by using ```tidyr```:
+
+```
+pf.fc_by_age_gender.wide <-
+  subset(pf.fc_by_age_gender[c('age', 'gender', 'median_friend_count')],
+         !is.na(gender)) %>%
+  spread(gender, median_friend_count) %>%
+  mutate(ratio = male / female)
+
+head(pf.fc_by_age_gender.wide)
 ```
 
 
