@@ -96,17 +96,27 @@ ggplot(aes(x = age, y = median_friend_count), data = pf.fc_by_age_gender) +
 ***
 
 ### Thinking in Ratios
-Notes:
+From the plot above we can notice that the women of ages younger than 30 have almost 2.5 times more friends then men at that ages. We can also see that women have more friens in general until late ages if we can consider them because the data after 70 seems suspicious.
 
 ***
 
 ### Wide and Long Format
-Notes:
+The data we have is in a long format or more tidy as it has one column that englobes catgeories to make it more tidy and have a record per data. However, for some of our analysis we want to change from this long format to wide format to be able to interpret categorical values of one column into different columns (similar to dummy variables, but these are columns split for comparing our variables/categories). 
+
+In this case, we want to compare gender, so we will need to have instead of one column for gender, two columns: one for male and another for female.
 
 ***
 
 ### Reshaping Data
-Let's reshape median_friend_count data so that the gender is split in a wide view of the data, meaning that gender column will be left out and we will have columns female and male. We can do this using ```reshape2``` library.
+Let's reshape median_friend_count data so that the gender is split in a wide view of the data, meaning that gender column will be left out and we will have columns female and male. We can do this using ```reshape2``` library and its method ```dcast()```. 
+
+An important note for the usage of ```dcast()``` is when we specify the variables we want to keep or split. We use a syntax similar to the following one:
+
+Columns to keep as their are go on the left of a ```~```
+Columns that we want to split in separate columns per variables on it go on the right of ```~```
+
+
+Thus, below you see ```age ~ gender``` since we want the age groups to stay in a column, but we want the gender column to split into its two values: male and female. then, we will use ```value.var``` to determine the data to use to populate the rows of each column after the split.
 
 ```{r}
 install.packages('reshape2')
@@ -135,11 +145,15 @@ head(pf.fc_by_age_gender.wide)
 ***
 
 ### Ratio Plot
-Notes:
+Once we have our wide dataframe for age of female and male median friend count, let's look at a plot of their ratios.
 
 ```{r Ratio Plot}
-
+ggplot(aes(x = age, y = female/male), data = pf.fc_by_age_gender.wide) +
+  geom_line() +
+  geom_hline(yintercept = 1, alpha = 0.4, linetype = 2)
 ```
+
+From this plot we can confirm our assumption that young women usually have 2.5 more friends than male at the same age. This also show us that women tend to have more friends on facebook.
 
 ***
 
