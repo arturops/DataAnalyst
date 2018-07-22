@@ -1,0 +1,62 @@
+---
+title: "diamondsManyVarEDA"
+author: "Arturo Parrales"
+date: "7/22/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Diamond Dataset Exploration for Many Variables
+
+In this project we will analyze the diamonds dataset from the ggplot package. It is intended to analyze multiple variables with different plots.
+
+```{r diamond}
+#Load ggplot first
+library(ggplot2) 
+
+# Load diamonds dataset contained in ggplot package
+data(diamonds)
+d <- diamonds
+
+```
+
+Once we loaded the dataset, we can see the diamonds dataset has:
+
+```{r dataset size, echo=FALSE}
+print('Observations: ')
+nrow(d) 
+print('Variables: ')
+ncol(d)
+```
+
+## Exploring the Diamonds Price
+
+```{r Histogram of Prices}
+# Create a histogram of diamond prices.
+# Facet the histogram by diamond color
+# and use cut to color the histogram bars.
+
+ggplot(aes(price, fill = cut), data = subset(d, !is.na(price))) +
+  facet_wrap( ~ color) +
+  geom_histogram() +
+  scale_x_log10() +
+  scale_fill_brewer(type = 'qual')
+
+```
+
+```{r Scatterplot Price vs Table}
+# Create a scatterplot of diamond price vs.
+# table and color the points by the cut of
+# the diamond.
+
+ggplot(aes(y = price, x = table), data = subset(d, !is.na(table), !is.na(price))) +
+  geom_jitter(alpha = 1/2, aes(color = cut)) +
+  scale_colour_brewer(type = 'qual') +
+  scale_x_continuous(limits = c(48,80), breaks = seq(min(d$table), max(d$table), by = 3))
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
