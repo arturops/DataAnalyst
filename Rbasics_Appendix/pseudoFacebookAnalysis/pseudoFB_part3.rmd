@@ -417,18 +417,16 @@ ggpairs(pf_subset[sample.int(nrow(pf_subset), 1000), ]);
 ***
 
 ### Even More Variables
-Notes:
-
-***
-
-### Heat Maps
-Notes:
+In order to explore more variables one can use the example of the genome analysis. Such dataset can be downloaded from [here](https://s3.amazonaws.com/udacity-hosted-downloads/ud651/nci.tsv).
 
 ```{r Genome Data}
 nci <- read.table("nci.tsv")
 colnames(nci) <- c(1:64)
 ```
+***
 
+### Heat Maps
+One can observe the genome genes that are more relevant using heatmaps.
 
 ```{r Genome Heatmap}
 nci.long.samp <- melt(as.matrix(nci[1:200,]))
