@@ -301,30 +301,41 @@ ggplot(aes(x = 7 * round(tenure / 7), y = friendships_initiated / tenure),
 
 ***
 
-### Sean's NFL Fan Sentiment Study
-Notes:
-
-***
-
 ### Introducing the Yogurt Data Set
-Notes:
+This dataset contains information of households that consume yogurt.
+
+```{r Loading Yogurt Dataset}
+yo <- read.csv('yogurt.csv')
+str(yo)
+```
+
+```id``` variable should be a ```Factor``` type, so we need to convert it:
+
+```{r id to Factor}
+yo$id <- factor(yo$id)
+str(yo)
+```
 
 ***
 
 ### Histograms Revisited
-Notes:
+Let's create a histogram of yogurt prices
 
 ```{r Histograms Revisited}
-
+ggplot(aes(price), data = yo ) +
+  geom_histogram(binwidth = 10)
 ```
 
 ***
 
 ### Number of Purchases
-Notes:
 
 ```{r Number of Purchases}
+summary(yo)
+length(unique(yo$price))
+table(yo$price)
 
+str(yo)
 ```
 
 ***
@@ -333,19 +344,44 @@ Notes:
 Notes:
 
 ```{r Prices over Time}
+# Create a new variable called all.purchases,
+# which gives the total counts of yogurt for
+# each observation or household.
+yo <- transform(yo, all.purchases = strawberry + blueberry + pina.colada + plain + mixed.berry)
+
+str(yo)
+
+# visualize the histogram of all.purchases
+ggplot(aes(all.purchases), data = yo) +
+  geom_histogram(binwidth = 1)
+
+# visualize the relationship of price vs time
+ggplot(aes(x = time, y = price), data = yo) +
+  geom_jitter(aes(size = all.purchases), alpha = 1/4)
 
 ```
 
 ***
 
 ### Sampling Observations
-Notes:
+Let's grab random samples to see what we find.
 
 ***
 
 ### Looking at Samples of Households
 
 ```{r Looking at Sample of Households}
+# Set seed function to make randomness reproducible
+set.seed(4230)
+
+# sample 16 housholds
+sample.ids <- sample(levels(yo$id),16)
+
+# plot the sample of households
+ggplot(aes(x = time, y = price), data = subset(yo, id %in% sample.ids)) +
+  facet_wrap(~id) +
+  geom_line() +
+  geom_point(aes(size = all.purchases), pch = 1)
 
 ```
 
@@ -362,7 +398,21 @@ Notes:
 ***
 
 ### Scatterplot Matrix
-Notes:
+
+```{r Scatter Matrix}
+#install.packages('GGally')
+library('GGally')
+theme_set(theme_minimal(20))
+
+# set seed
+set.seed(1836)
+
+# The - sign in the "select" value indicates all but the listed columns.
+pf_subset <- subset(pf, select = -c(userid, year_joined, year_joined.bucket))
+
+# plot scatter matrix
+ggpairs(pf_subset[sample.int(nrow(pf_subset), 1000), ]);
+```
 
 ***
 
@@ -374,12 +424,13 @@ Notes:
 ### Heat Maps
 Notes:
 
-```{r}
+```{r Genome Data}
 nci <- read.table("nci.tsv")
 colnames(nci) <- c(1:64)
 ```
 
-```{r}
+
+```{r Genome Heatmap}
 nci.long.samp <- melt(as.matrix(nci[1:200,]))
 names(nci.long.samp) <- c("gene", "case", "value")
 head(nci.long.samp)
