@@ -112,11 +112,11 @@ Let's reshape median_friend_count data so that the gender is split in a wide vie
 
 An important note for the usage of ```dcast()``` is when we specify the variables we want to keep or split. We use a syntax similar to the following one:
 
-Columns to keep as their are go on the left of a ```~```
+Columns to keep as they are go on the left of a ```~```
 Columns that we want to split in separate columns per variables on it go on the right of ```~```
 
 
-Thus, below you see ```age ~ gender``` since we want the age groups to stay in a column, but we want the gender column to split into its two values: male and female. then, we will use ```value.var``` to determine the data to use to populate the rows of each column after the split.
+Thus, below you see ```age ~ gender``` since we want the age groups to stay in a column, but we want the gender column to split into its two values: male and female. Then, we will use ```value.var``` to determine the data to use to populate the rows of each column after the split.
 
 ```{r}
 install.packages('reshape2')
@@ -161,7 +161,7 @@ From this plot we can confirm our assumption that young women usually have 2.5 m
 Notes:
 
 ```{r Third Quantitative Variable}
-
+pf$year_joined <- floor(2014 - (pf$tenure / 365))
 ```
 
 ***
@@ -170,6 +170,21 @@ Notes:
 Notes:
 
 ```{r Cut a Variable}
+# show summary of year_joined
+summary(pf$year_joined)
+
+# show the frequency of each category
+table(pf$year_joined)
+
+# bin/cut the variables to make groups
+#        (2004, 2009]
+#        (2009, 2011]
+#        (2011, 2012]
+#        (2012, 2014]
+pf$year_joined.bucket <- cut(pf$year_joined, breaks = c(2004,2009,2011,2012,2014))
+
+# table of bins (show also NA counts)
+table(pf$year_joined.bucket, useNA = 'ifany')
 
 ```
 
@@ -179,6 +194,13 @@ Notes:
 Notes:
 
 ```{r Plotting it All Together}
+# Create a line graph of friend_count vs. age
+# so that each year_joined.bucket is a line
+# tracking the median user friend_count across
+# age.
+
+ggplot(aes(x = age, y = friend_count), data = subset(pf, !is.na(year_joined.bucket)) ) +
+  geom_line(aes(color = year_joined.bucket), stat = 'summary', fun.y = median)
 
 ```
 
@@ -188,7 +210,9 @@ Notes:
 Notes:
 
 ```{r Plot the Grand Mean}
-
+ggplot(aes(x = age, y = friend_count), data = subset(pf, !is.na(year_joined.bucket)) ) +
+  geom_line(aes(color = year_joined.bucket), stat = 'summary', fun.y = mean) +
+  geom_line( stat = 'summary', fun.y = mean, linetype = 2)
 ```
 
 ***
@@ -197,7 +221,13 @@ Notes:
 Notes:
 
 ```{r Friending Rate}
+summary(subset(pf$friend_count/pf$tenure, pf$tenure > 0))
+```
 
+The code above can also be done using ```with()``` :
+
+```
+with(subset(pf, tenure > 0), summary( friend_count / tenure))
 ```
 
 ***
@@ -206,11 +236,17 @@ Notes:
 Notes:
 
 What is the median friend rate?
+0.2205 friends/day
 
 What is the maximum friend rate?
+417 friends/day
 
 ```{r Friendships Initiated}
+# Create a line graph of mean of friendships_initiated per day (of tenure)
+# vs. tenure colored by year_joined.bucket.
 
+ggplot(aes(x = tenure, y = friendships_initiated / tenure), data = subset(pf, tenure > 0)) +
+  geom_line(aes(color = year_joined.bucket))
 ```
 
 ***
@@ -245,6 +281,23 @@ ggplot(aes(x = 90 * round(tenure / 90), y = friendships_initiated / tenure),
             fun.y = mean)
 
 ```
+
+We can also use ```geom_smooth()``` to get a graph with less noise.
+
+```{r geom_line friendships rate}
+ggplot(aes(x = 7 * round(tenure / 7), y = friendships_initiated / tenure),
+       data = subset(pf, tenure > 0)) +
+  geom_line(aes(color = year_joined.bucket),
+            stat = "summary",
+            fun.y = mean)
+```
+
+```{r geom_line friendships rate}
+ggplot(aes(x = 7 * round(tenure / 7), y = friendships_initiated / tenure),
+       data = subset(pf, tenure > 0)) +
+  geom_smooth(aes(color = year_joined.bucket))
+```
+
 
 ***
 
