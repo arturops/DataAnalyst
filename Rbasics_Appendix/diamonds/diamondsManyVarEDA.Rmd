@@ -53,10 +53,47 @@ ggplot(aes(price, fill = cut), data = subset(d, !is.na(price))) +
 # the diamond.
 
 ggplot(aes(y = price, x = table), data = subset(d, !is.na(table), !is.na(price))) +
-  geom_jitter(alpha = 1/2, aes(color = cut)) +
+  geom_jitter(alpha = 1/3, aes(color = cut)) +
   scale_colour_brewer(type = 'qual') +
-  scale_x_continuous(limits = c(48,80), breaks = seq(min(d$table), max(d$table), by = 3))
+  scale_x_continuous(limits = c(50,80), breaks = seq(min(d$table), max(d$table), by = 4))
 
+```
+
+```{r Scatterplot Price vs Volume}
+# Create a scatterplot of diamond price vs.
+# volume (x * y * z) and color the points by
+# the clarity of diamonds. Use scale on the y-axis
+# to take the log10 of price. You should also
+# omit the top 1% of diamond volumes from the plot.
+
+d <- transform(d, volume = x*y*z)
+
+ggplot(aes(x = volume, y = price), data = subset(d, d$volume <= quantile(d$volume, 0.99))) +
+  geom_jitter(aes(color = clarity)) +
+  scale_y_log10() +
+  scale_color_brewer(type = 'div')
+
+```
+
+```{r Scatterplot Price/Carat Ratio vs Cut}
+# Create a scatter plot of the price/carat ratio
+# of diamonds. The variable x should be
+# assigned to cut. The points should be colored
+# by diamond color, and the plot should be
+# faceted by clarity.
+
+ggplot(aes(x = cut, y = price/carat), data = subset(d, !is.na(price), !is.na(carat))) +
+  geom_jitter(aes(color = color), size = 0.2) +
+  facet_wrap( ~ clarity ) +
+  ylab('Price/Carat') +
+  xlab('Cut') +
+  theme(axis.text.x = element_text(face="bold", size=6, angle=90),
+        axis.text.y = element_text(face="bold", size=8, angle=0),
+        strip.text = element_text(size=10), 
+        legend.text = element_text(size=6), legend.title = element_text(face='bold',size=8),
+        axis.title.x = element_text(size=12), axis.title.y = element_text(size=12)) +
+  scale_colour_brewer(type = 'div') 
+  
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
