@@ -442,8 +442,49 @@ ggplot(aes(y = gene, x = case, fill = value),
 
 ***
 
-### Analyzing Three of More Variables
-Reflection:
+### Analyzing Three of More Variables -  Proportion of Friendships Initiated
+
+We are going to create a new variable called **prop_initiated** in the Pseudo-Facebook data set. The variable should contain the proportion of friendships that the user initiated.
+
+```{r Proportion Friendships Initiated}
+pf$prop_initiated <- ifelse(pf$friend_count >0, pf$friendships_initiated/pf$friend_count, 0)
+
+summary(pf$prop_initiated)
+```
+
+Once we have the proportion of friendships initiated, we can make a plot of it
+
+```{r Median Proportion Friendships Initiated}
+# Create a line graph of the median proportion of
+# friendships initiated ('prop_initiated') vs.
+# tenure and color the line segment by
+# year_joined.bucket.
+theme_set(theme_minimal(20))
+
+ggplot(aes(x = tenure, y = prop_initiated), data = subset(pf, !is.na(pf$tenure))) +
+  geom_line(aes(color = year_joined.bucket), stat = 'summary', fun.y=median)
+
+```
+
+Finally, we will smooth our plot to reduce the noise
+
+```{r Smooth Median Proportion Friendships Initiated}
+# Create a line graph of the median proportion of
+# friendships initiated ('prop_initiated') vs.
+# tenure and color the line segment by
+# year_joined.bucket.
+theme_set(theme_minimal(20))
+
+smooth_factor_tenure = 40
+
+ggplot(aes(x = smooth_factor_tenure*round(tenure/smooth_factor_tenure), y = prop_initiated), data = subset(pf, !is.na(pf$tenure))) +
+  geom_smooth(aes(color = year_joined.bucket), stat = 'summary', fun.y=median)
+
+```
+
+```{r}
+by(pf$prop_initiated, pf$year_joined.bucket, summary)
+```
 
 ***
 
