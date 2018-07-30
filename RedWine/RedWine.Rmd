@@ -13,6 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 # Red Wine Quality Analysis by *Arturo Parrales Salinas*
 ========================================================
 
+## Main Research Goal
+
+The variable that interest us the most is **quality** since we want to understand **which chemical properties influence the quality of red wines**.
+
 > **Tip**: One of the requirements of this project is that your code follows
 good formatting techniques, including limiting your lines to 80 characters or
 less. If you're using RStudio, go into Preferences \> Code \> Display to set up
@@ -38,7 +42,7 @@ library(corrplot)
 library(purrr)
 library(tidyr)
 library(ggplot2)
-library('GGally')
+#library('GGally')
 library(psych)
 ```
 
@@ -53,9 +57,17 @@ red <- read.csv('wineQualityReds.csv')
 str(red)
 ```
 
-The variables on the dataset are explained below:
+We can see a variable X which indicates the index of the record in the dataset. We definitively want to remove X before we move forward
 
-### Attribute Measure Units
+```{r echo=FALSE, Univariate_Plots_Remove_X}
+# remove X
+red <- red[,-1]
+str(red)
+```
+
+Once we removed X, we can continue to understand the variables on the dataset.
+
+### Attribute Measure Units of Each Variable
 
    For more information, read [Cortez et al., 2009].
 
@@ -103,16 +115,6 @@ The variables on the dataset are explained below:
    Output variable (based on sensory data): 
    12 - quality (score between 0 and 10)
 
---------
-
-> **Tip**: Before you create any plots, it is a good idea to provide a short
-introduction into the dataset that you are planning to explore. Replace this
-quoted text with that general information!
-
-
-
-
-
 
 # Univariate Plots Section
 
@@ -124,35 +126,40 @@ There should be multiple code chunks and text sections; the first one below is
 just to help you get started.
 
 ----
-We can start with a summary of the dataset information for each variable
+In the previous sections, we hgave an overview of the dataset and here we can start with a summary of the dataset information for each variable.
 
 ```{r echo=FALSE, Univariate_Plots_Var_Summary}
 # dataset summary
 summary(red)
 ```
 
-We can see a variable X which indicates the index of the record in the dataset. All, other variable were described in the previous section. The variable that interest us the most is **quality** since we want to understand **which chemical properties influence the quality of red wines**.
-
 Let's start looking at the **quality** summary, we can notice that the lowest quality of red wines was 3 and the maximum was 8. This tell us there are neither very bad quality wines nor very excellent wines in this dataset.
 
 ```{r echo=FALSE, Univariate_Plots_Factor_Quality}
-# remove X
-red <- red[,-1]
 # making quality a factor
 red$quality_cat <- factor(red$quality)
 str(red$quality_cat)
+table(red$quality_cat)
 ```
 
 
-```{r echo=FALSE, Univariate_Plots_Quality_Hist}
+```{r echo=FALSE, Univariate_Plots_Quality_Bar}
 # bar plot of quality
-ggplot(aes(x = quality_cat), data = red) +
-  geom_histogram(stat = "count")
+ggplot(aes(x = quality_cat, fill = quality_cat), data = red) +
+  geom_bar(stat = "count") +
+  scale_fill_brewer(type='seq') +
+  theme(panel.background = element_rect(fill='black'), panel.grid = element_blank())
 ```
 
 From this plot we can tell the quality 5 is the most frequent and it is closely followed by quality 6. On the other hand, we have 3 and 8 as the least frequent. This plot will help us understand why we might have more medium quality wines in our future plots.
 
 There is one variable that stands out at a quick glance in the summary. The **density** seems to have a very tiny difference between minimum, median and maximum values. 
+
+```{r echo=FALSE, Univariate_Plots_Density}
+# Summary of the density variable
+summary(red$density)
+```
+
 
 ```{r echo=FALSE, Univariate_Plots_Density_Hist}
 # Histogram of quality
@@ -207,7 +214,7 @@ ggplot(aes(x = citric.acid), data = red) +
   geom_histogram(binwidth=0.005)
 ```
 
-From a fine histogram the **citric.acid** seems not to be a clear contributing factor to a red wine quality.
+From a fine histogram the **citric.acid** seems not to be a clear contributing factor to a red wine quality. However, the fact that there is still more than one peak makes us doubt if each peak can be related to a group of quality.
 
 ```{r echo=FALSE, Univariate_Plots_Residual_Sugars}
 # Histogram of residual sugars
@@ -218,6 +225,7 @@ ggplot(aes(residual.sugar), data = red) +
 
 Surprisingly, most wines have low **residual.sugar**, and it could be that good quality is associated to extremly low or high residual.sugar. This might be a good variable to help us distinguish low quality vs good quality wines.
 
+Finally, let's check another left tailed distribution that according to the name seems to be related to the wine quality. I am referring to alcohol
 
 ```{r echo=FALSE, Univariate_Plots_Alcohol}
 # Histogram of alcohol
@@ -226,65 +234,64 @@ ggplot(aes(alcohol), data = red) +
 
 ```
 
+This histogram seems to have a peak between 9 and 10, but a very low level between 8.2 and 9. Same happens the highe rthe alcohol level gets, the smaller the bin height gets. This can be an indication of alcohol associated to the quality as the low and high quality wines are few. 
+
+> **Note:** We will need to explore more, but it seems skewed distributions might be related to quality.
 
 ```{r echo=FALSE, Univariate_Plots_All_Box_Plots}
 # box plots of all variables in the dataset
-ggplot(aes(x = ind, y = (values)^(1/2)), data = stack(red[,-1]) ) +
+ggplot(aes(x = ind, y = (values)^(1/200)), data = stack(red[,-1]) ) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90))
 
 ```
-> **Tip**: Make sure that you leave a blank line between the start / end of
-each code block and the end / start of your Markdown text so that it is
-formatted nicely in the knitted text. Note as well that text on consecutive
-lines is treated as a single space. Make sure you have a blank line between
-your paragraphs so that they too are formatted for easy readability.
+
 
 # Univariate Analysis
 
-> **Tip**: Now that you've completed your univariate explorations, it's time to
-reflect on and summarize what you've found. Use the questions below to help you
-gather your observations and add your own if you have other thoughts!
+This univariate analysis was the first step on the exploration and to get familiar with the data. Basically, some histograms were performed to understand the distributions of the features and also to understand what are the most frequent quality grades of red wines in the dataset.
 
 ### What is the structure of your dataset?
 
-The dataset is tidy and contains 1,599 red wines records with 12 variables on the chemical properties of the wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent). 
+The dataset is tidy and contains 1,599 red wines records with 12 variables on the chemical properties of the wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent). However, the quality of the wines in the dataset only range from 3 to 8 since there are no 0,1,2,9 nor 10 graded wines in our data.
 
 ### What is/are the main feature(s) of interest in your dataset?
 
-**Quality** is the main interest variable. Our goal is to figure out which elements contribute to the quality fo a wine.
+**Quality** is the main interest variable. Our goal is to figure out which elements contribute to the quality of a wine.
 
-### What other features in the dataset do you think will help support your \
-investigation into your feature(s) of interest?
+From our exploration I could tell that the quality has mainly 5 or 6 grade. Using some intuition at this point, we might consider that tailed histograms can be features that we want to consider as there is more information on the 5 and 6 grade compared to lower and higher red wine quality.
 
-After our histograms, some variables that look to be representative for quality are:
+This idea also applies to distributions that seem  bimodal or have more than one peak such as citric acid. In my opinion, this distributions might also have a hidden pattern related to quality and that might be the reason of having more than one mode.
 
+Thus, after our histograms, some variables that seem promising when understanding quality are:
+
+* Citric acid
 * Fixed acidity
-* Free Sulfur Dioxide
-
+* Free sulfur dioxide
 * Volatile acidity
-
+* Total sulfur dioxide
+* Alcohol
 * Residual sugar
 * Chlorides
 * Sulphates
 
-* Total Sulfur Dioxide
-* Alcohol
+
+### What other features in the dataset do you think will help support your \
+investigation into your feature(s) of interest?
+
+I also explored the density and it seems that it can be different for all wines, but the intersting part wil be to explore if the tails of the distribution contains elements from all wine qualities of if they are related to lower and higher quality wines.
 
 ### Did you create any new variables from existing variables in the dataset?
 
 No, there was not a need for now to create a new variable.
 
-### Of the features you investigated, were there any unusual distributions? \
+### Of the features investigated, were there any unusual distributions? \
 Did you perform any operations on the data to tidy, adjust, or change the form \
 of the data? If so, why did you do this?
 
 In the histograms, we found:
 
-* Normal distributions:
-  * Residual sugar
-  * Chlorides
-  * Sulphates
+* Normal or very close to normal distributions:
   * pH
   * Density
 
@@ -293,19 +300,22 @@ In the histograms, we found:
   * Alcohol
   * Fixed Acidity
   * Free Sulfur Dioxide
+  * Volatile Acidity
+  * Chlorides
+  * Sulphates
+  * Residual sugar
   
 * Bimodal or not normal distributions:
   * Citric Acid
-  * Volatile Acidity
+  
+It seems that the not normal distributions might be more related to the quality since we have a higher number of quality 5 and 6 wines. This can mean that the tails can explain the lowest and highest quality wines on the dataset.
+
+Luckily this dataset was made from tidy data and the only variable that needed a type change was quality. This was to make it a factor and have it as a true categorical variable rather than numerical.
 
 
 # Bivariate Plots Section
 
-> **Tip**: Based on what you saw in the univariate plots, what relationships
-between variables might be interesting to look at in this section? Don't limit
-yourself to relationships between a main output feature and one of the
-supporting variables. Try to look at relationships between supporting variables
-as well.
+In the previous section, we use our intuition to choose some relevant variables, so it will be a good idea to find what is the correlation between all variables in the dataset to narrow our exploration and remove possible colinearities.
 
 The first thing to start our bivariate analysis will be to check which variables might have a correlation with each other. For this we will use pearson's correlation coefficient.
 
@@ -329,22 +339,38 @@ corrplot(mcor, type = "upper", order = "hclust",
 
 ```
 
-Looking at the plot is easier to understand what variables are more correlated. We are interested in **quality** of a wine and the factors that contribute to it, so we can generate plots to inspect the relationship between variables that show some correlation between them.
+From the plot we can easily see what variables are related and choose which ones to analyze:
+
+Chlorides and sulphates are correlated so choosing only one of them might be good to start our analysis. Thus, I will add **sulphates** to our list.
+
+The same happens for fixed acidity and citric acid. However, **citric acid** is a variable with a strange distribution, so we better keep it to explore how this relates to quality.
+
+Citric acid seems also correlated to volatile acidity. However, volatile acidity is not correlated to fixed acidity. It might be good to keep **volatile acidity** and explore how it can contribute to quality.
+
+Total sulfur dioxide and free sulfur dioxide seem correlated, but not with anything else. Thus, I will choose the **total sulfur dioxide** to investigate it.
+
+We have already decided to keep citric acid, so we can keep **alcohol** despite it is a bit correlated, this is mainly to test if alcohol level actually impacts a wine quality.
+
+> **Note:** Wine is alcohol, so my curiousity drives me to understand if the alcohol level matters.
+
+Finally, from our promising features, we have the **residual sugar** which seems not correlated to anything. it also had a slightly left tailed distribution, so it might be worthy to check how it affects quality or if it is neutral.
+
+Once we have chosen these features, we had also decided to understand if **density** played part on the quality, so we will also explore it.
+
+Now, we can generate plots to inspect the variables we chose to explore to find insights about the relationship of them to **quality**.
 
 ```{r echo=FALSE, warning=FALSE, Bivariate_Plots_All_Vars}
 # Plot of relevant variables
-interest = c('sulphates','density','citric.acid','alcohol','volatile.acidity','pH','total.sulfur.dioxide')
+interest = c('sulphates','density','citric.acid','alcohol','volatile.acidity','total.sulfur.dioxide', 'residual.sugar')
 pairs.panels(red[,interest],bg=c("yellow","blue")[(red > 10)+1],pch=21,
              main = 'Relation between Relevant Variables')
 ```
 
-From the plot, we can 
+From the plot, we can see that alcohol and density seem to show the expected slight correlation we had before. Same applies to volatile acidity and citric acid. Besides those variables everything else seems to have almost no correlation which can be a good indicator to understand the independent variable that relate to quality.
 
+> **Note:** Density is actually a variable with most of the slight correlations in the plot, so if we find density to be not very important, we can remove it. it also has a normal distribution which can be a reason of it correlating slightly with other variables.
 
-
-
-
-We can explore further relations between quality and variables. let's tart from **density** since we noticed most wines have similar densities.
+We can explore further relations between quality and variables. let's start from **density** since we noticed most wines have similar densities.
 
 ## Density
 
@@ -447,6 +473,49 @@ ggplot(aes(y = total.sulfur.dioxide, x = quality_cat ), data = red) +
 
 The total sulfur dioxide seems not to have a clear correlation to the quality of a wine. it actually seems to be similar in all wines and it follows the same pattern of wines in each category. In other words, we have more wines 5 and 6 and also this show a higher total sufur dioxide.
 
+## Residual Sugar
+
+Finally, we can analyze the residual sugar and how it is related to quality. There are some wines that are considered sweeter than others. Could this also be realted to quality?
+
+```{r echo=FALSE, Bivariate_Plots_ResidualSugar_Quality_Boxplot}
+# Boxplot of Quality and Residual Sugar
+ggplot(aes(y = residual.sugar, x = quality_cat ), data = red) +
+  geom_boxplot(aes(fill = quality_cat)) +
+  scale_fill_brewer(type = 'seq')
+```
+
+Apparently the residual sugar of a wine does not define the quality of a wine, and maybe that can explain why wines that are sweeter can be also high quality. 
+
+Once we have analyzed our desired variables, we can make some conclusions out of the plots.
+
+# Bivariate Analysis
+
+From the variables we chose, we found that 4 or 5 of them seem to be contributing to the quality of a red wine. The order in which, I would rank them (1 being the highest noticeable contribution):
+
+1. Alcohol 
+2. Volatile acidity
+3. Sulphates 
+4. Citric acid
+5. Density
+
+### How did the feature(s) of interest vary with other features in \
+the dataset?
+
+In this bivariate analysis we found the correlation matrix between our variables. We left the quality on the side as it is a categorical variable. 
+
+From the correlation matrix we choose the variables that seem to have a decent correlation. We left the pH aside as it seems to be correlated to almost all our variables. 
+From this variable, I decided to review the density since we thought it might contribute to define highest and lowest quality wines. That in fact was confirmed with the scatter plot and better appreciated in box plots (which in practice are better in this cases as I use a categorical variable vs a numerical variable).
+
+Then I moved to the alcohol as in my mind wine is alcoholic, so this might affect wine taste in a huge proportion. I found that indeed the higher the level of alcohol the higher the quality of the red wine.
+
+
+
+### Did you observe any interesting relationships between the other features \
+(not the main feature(s) of interest)?
+
+### What was the strongest relationship you found?
+
+
 
 
 ORDER
@@ -457,22 +526,6 @@ ORDER
 -total.sulfur.dioxide,
 -density[DONE]
 
-
-
-
-# Bivariate Analysis
-
-> **Tip**: As before, summarize what you found in your bivariate explorations
-here. Use the questions below to guide your discussion.
-
-### Talk about some of the relationships you observed in this part of the \
-investigation. How did the feature(s) of interest vary with other features in \
-the dataset?
-
-### Did you observe any interesting relationships between the other features \
-(not the main feature(s) of interest)?
-
-### What was the strongest relationship you found?
 
 
 # Multivariate Plots Section
@@ -486,18 +539,20 @@ will do that.
 
 ```{r echo=FALSE, Multivariate_Plots_1}
 
-ggplot(aes(x = alcohol, y = volatile.acidity, fill = quality_cat), data = red) +
-  geom_hex() +
+ggplot(aes(x = alcohol, y = volatile.acidity, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(size=2) +
   scale_fill_brewer(type='seq') +
+  scale_color_brewer(type = 'div') +
   theme(panel.background = element_rect(fill='gray'))
 ```
 
 ```{r echo=FALSE, Multivariate_Plots_2}
 
-ggplot(aes(x = alcohol, y = sulphates, color = quality_cat), data = red) +
-  geom_point() +
-  scale_colour_brewer(type='div') +
-  theme(panel.background = element_rect(fill='black'))
+ggplot(aes(x = alcohol, y = sulphates, color= quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.85, size =5) +
+  scale_fill_brewer( palette = 'Reds') +
+  scale_colour_brewer(palette = 'Reds')
+  theme(panel.background = element_rect(fill='gray'))
 
 ```
 
