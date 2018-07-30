@@ -431,9 +431,9 @@ ggplot(aes(y = volatile.acidity, x = quality_cat ), data = red) +
   scale_fill_brewer(type = 'seq')
 ```
 
-Interestingly enough the volatile acidity seems to constantly reduce the higher **quality** grade a wine gets.
+Interestingly enough the volatile acidity seems to constantly reduce compare to the **quality** grade a wine gets.
 
-At this point the **alcohol** and  **volatile acidity** seem to be related to wine quality.
+At this point the **alcohol** and **volatile acidity** seem to be related to wine quality.
 
 ## Sulphates
 
@@ -471,7 +471,7 @@ ggplot(aes(y = total.sulfur.dioxide, x = quality_cat ), data = red) +
   scale_fill_brewer(type = 'seq')
 ```
 
-The total sulfur dioxide seems not to have a clear correlation to the quality of a wine. it actually seems to be similar in all wines and it follows the same pattern of wines in each category. In other words, we have more wines 5 and 6 and also this show a higher total sufur dioxide.
+The total sulfur dioxide seems not to have a clear correlation to the quality of a wine. it actually seems to be similar in all wines and it follows the same pattern of wines in each category. In other words, we have more wines 5 and 6 and also this show a higher total sulfur dioxide.
 
 ## Residual Sugar
 
@@ -498,25 +498,46 @@ From the variables we chose, we found that 4 or 5 of them seem to be contributin
 4. Citric acid
 5. Density
 
-### How did the feature(s) of interest vary with other features in \
-the dataset?
+### How did the feature(s) of interest vary with other features in the dataset?
 
-In this bivariate analysis we found the correlation matrix between our variables. We left the quality on the side as it is a categorical variable. 
+In this bivariate analysis we found the correlation matrix between our variables, we left the quality out of the matrix as it is a categorical variable.
 
-From the correlation matrix we choose the variables that seem to have a decent correlation. We left the pH aside as it seems to be correlated to almost all our variables. 
-From this variable, I decided to review the density since we thought it might contribute to define highest and lowest quality wines. That in fact was confirmed with the scatter plot and better appreciated in box plots (which in practice are better in this cases as I use a categorical variable vs a numerical variable).
+From the correlation matrix, we reduce the number of promising features to explore based on the variables' correlation. 
 
-Then I moved to the alcohol as in my mind wine is alcoholic, so this might affect wine taste in a huge proportion. I found that indeed the higher the level of alcohol the higher the quality of the red wine.
+> **Note:** pH was correlated to almost all our variables. 
+
+Soemthing we mentioned before is that the features of interest had a left tailed distribution or completely random. This was also seen in the boxplots of each feature vs quality. Moreover, with the correlation matrix we narrow the features of interest even further.
 
 
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
 
-### Did you observe any interesting relationships between the other features \
-(not the main feature(s) of interest)?
+We had decided to review the density since we thought it might contribute to define highest and lowest quality wines. It in fact was confirmed that density slightly contribute to quality since the higher the quality of a wine the slightly lower density the wine has. This was first shown with a scatter plot and then better appreciated with a box plot (which in practice are better in this cases as I use a categorical variable vs a numerical variable).
 
 ### What was the strongest relationship you found?
 
+In order to determine the strongest relationship we used box plots for all the chosen features of interest selectd after the correlation matrix. the analysis was as follow:
+
+From the more promising features chosen, we started with alcohol vs quality. Since wine is alcoholic, this might affect wine taste in a huge proportion. We found that indeed the higher the level of alcohol the higher the quality of the red wine.
+
+Then, we checked volatile acidity and we found that it constantly reduces while the **quality** grade of a wine gets higher.
+
+From there, we did a boxplot of sulphates and they showed to have a trend related to **quality**. The sulphates get higher for higher quality wines.
+
+Citric acid was our next variable to analyze and mainly because it had a completely different distribution compared to other features. Something interesting about citric acid is that it was correlated to volatile acidity. Since both turned to be related we were not surprised that citric acid that for quality wines 5 to 8 the more citric acid the higher the quality of a wine.
+
+Finally, the total sulfur dioxide and the residual sugar didn't show a clear correlation to the quality and no trends were noticed.
 
 
+If we sort these features of interest and our additional variable which was density, we ended up with the following list which is ordered from strongest to weakest relationship with quality of the variable listed:
+
+1. Alcohol - Positive. Higher alcohol level, higher quality
+2. Volatile acidity - Negative. Lower volatile acidity, higher quality
+3. Sulphates - Positive. Higher sulphates, higher quality
+4. Citric acid - Positive. Higher citric acid, higher quality. [Negative correlation with Volatile acidity]
+5. Density - Negative. Lower density, higher quality. [Negative correlation with Alcohol]
+
+
+However, we can notice that the last two variables citric acid and density are correlated to volatile acidity and alcohol, respectively. This might mean we need to drop these two variables. In any situation, these two variables were left only for curiosity and exploration.
 
 ORDER
 +alcohol [DONE], 
@@ -537,8 +558,10 @@ create here are justified by the plots you explored in the previous section. If
 you plan on creating any mathematical models, this is the section where you
 will do that.
 
-```{r echo=FALSE, Multivariate_Plots_1}
+We start plotting our variables with strongest relation to quality.
 
+```{r echo=FALSE, Multivariate_Plots_Alcohol_VolatileAcidity_Quality}
+# plot fo two strongest relationship variables to quality: alcohol and volatile acidity
 ggplot(aes(x = alcohol, y = volatile.acidity, color = quality_cat, fill = quality_cat), data = red) +
   geom_hex(size=2) +
   scale_fill_brewer(type='seq') +
@@ -546,15 +569,52 @@ ggplot(aes(x = alcohol, y = volatile.acidity, color = quality_cat, fill = qualit
   theme(panel.background = element_rect(fill='gray'))
 ```
 
-```{r echo=FALSE, Multivariate_Plots_2}
+It seems that the lower the volatile acidity and the lower the alcohol the quality is good. However, the higher the alcohol gets the volatile acidity can also increase and the quality remains good.
 
-ggplot(aes(x = alcohol, y = sulphates, color= quality_cat, fill = quality_cat), data = red) +
-  geom_hex(alpha=0.85, size =5) +
-  scale_fill_brewer( palette = 'Reds') +
-  scale_colour_brewer(palette = 'Reds')
-  theme(panel.background = element_rect(fill='gray'))
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Sulphates_Quality}
+# Plot of strongest variable alcohol and the third strongest sulphates
+ggplot(aes(x = alcohol, y = sulphates, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.85, size = 8) +
+  scale_fill_brewer( palette = 'Purples') +
+  scale_colour_brewer(palette = 'Purples') +
+  theme(panel.background = element_rect(fill='darkgray'))
 
 ```
+
+From this plot, we can see that it is more common to have good wines after 10 % volume alcohol and the higher the alcohol level more chances of a grade 8 wine. Also, it seems grade 8 wines mainly appear when sulphates are in the range of 0.6 and 0.9.
+
+
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_Sulphates_Quality}
+# Plot of second strongest variable volatile acidity and the third strongest sulphates
+ggplot(aes(x = volatile.acidity, y = sulphates, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.95, size = 8) +
+  scale_fill_brewer( type = 'div') +
+  scale_colour_brewer( type = 'seq') +
+  theme(panel.background = element_rect(fill='darkgray'))
+
+```
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Density_Quality}
+# plot of variables alcohol and density
+ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.9, size=2) +
+  scale_fill_brewer(palette ='Reds') +
+  scale_color_brewer(palette ='Purples') +
+  theme(panel.background = element_rect(fill='gray'))
+```
+
+
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_CitricAcid_Quality}
+# plot of variables volatile acidity and citric acid
+ggplot(aes(x = volatile.acidity, y = citric.acid, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(size=2) +
+  scale_fill_brewer(palette = 'Greens') +
+  scale_color_brewer(type='div') +
+  theme(panel.background = element_rect(fill='gray'))
+```
+
 
 ```{r echo=FALSE, Multivariate_Plots}
 
