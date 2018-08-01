@@ -118,15 +118,7 @@ Once we removed X, we can continue to understand the variables on the dataset.
 
 # Univariate Plots Section
 
-> **Tip**: In this section, you should perform some preliminary exploration of
-your dataset. Run some summaries of the data and create univariate plots to
-understand the structure of the individual variables in your dataset. Don't
-forget to add a comment after each plot or closely-related group of plots!
-There should be multiple code chunks and text sections; the first one below is
-just to help you get started.
-
-----
-In the previous sections, we hgave an overview of the dataset and here we can start with a summary of the dataset information for each variable.
+In the previous sections, we have an overview of the dataset and here we can start with a summary of the dataset information for each variable.
 
 ```{r echo=FALSE, Univariate_Plots_Var_Summary}
 # dataset summary
@@ -214,7 +206,7 @@ ggplot(aes(x = volatile.acidity), data = red) +
 table(round(red$volatile.acidity,1))
 ```
 
-If we use fine bins for the **volatile.acidity** histogram we can see two or three trends. If we follow the higest two peaks, we can imagine them to be related to the most frequent quality of wines, so we basically can think that volatile.acidity in these peaks is mainly related to quality 5-6. To confirm this we will need a more ellaborated plot with two variables.
+If we use fine bins for the **volatile.acidity** histogram we can see two or three trends at 0.4, 0.5 and 0.6. If we follow the higest two peaks at 0.4 and 0.6, we can imagine them to be related to the most frequent quality of wines, so we basically can think that volatile acidity in these peaks is mainly related to quality 5-6. To confirm this we will need a more ellaborated plot with two variables.
 
 For the time being, we can continue to explore other variables such as **citric.acid**
 
@@ -222,6 +214,10 @@ For the time being, we can continue to explore other variables such as **citric.
 # Histogram of citric acid
 ggplot(aes(x = citric.acid), data = red) +
   geom_histogram(binwidth=0.005)
+```
+```{r echo=FALSE, Univariate_Plots_CitricAcid}
+# Table of the citric acid variable
+table(round(red$citric.acid,2))
 ```
 
 From a fine histogram the **citric.acid** seems not to be a clear contributing factor to a red wine quality. However, the fact that there is still more than one peak makes us doubt if each peak can be related to a group of quality.
@@ -233,7 +229,12 @@ ggplot(aes(residual.sugar), data = red) +
 
 ```
 
-Surprisingly, most wines have low **residual.sugar**, and it could be that good quality is associated to extremly low or high residual.sugar. This might be a good variable to help us distinguish low quality vs good quality wines.
+```{r echo=FALSE, Univariate_Plots_ResidualSugar}
+# Summary of the residual sugar variable
+summary(red$residual.sugar)
+```
+
+Surprisingly, most wines have low **residual.sugar**, and it could be that good quality is associated to extremly low or high residual sugar. This might be a good variable to help us distinguish low quality vs good quality wines.
 
 Finally, let's check another left tailed distribution that according to the name seems to be related to the wine quality. I am referring to alcohol
 
@@ -244,7 +245,12 @@ ggplot(aes(alcohol), data = red) +
 
 ```
 
-This histogram seems to have a peak between 9 and 10, but a very low level between 8.2 and 9. Same happens the highe rthe alcohol level gets, the smaller the bin height gets. This can be an indication of alcohol associated to the quality as the low and high quality wines are few. 
+```{r echo=FALSE, Univariate_Plots_Alcohol}
+# Summary of the alcohol variable
+summary(red$alcohol)
+```
+
+This histogram seems to have a peak between 9.5 and 10.5, but a very low level between 8.4 and 9.5. Same happens the higher the alcohol level gets, the smaller the bin height gets. This can be an indication of alcohol associated to the quality as the low and high quality wines are few. 
 
 > **Note:** We will need to explore more, but it seems skewed distributions might be related to quality.
 
@@ -336,8 +342,6 @@ cols
 mcor <- cor(red[,2:cols-2])
 round(mcor, 2)
 
-mcor2 <- cor(red[,2:cols-1])
-round(mcor2, 2)
 ```
 
 Since data is hard to visualize from the correlation matrix, we will plot it.
@@ -548,8 +552,8 @@ From the variables we chose, we found that 4 or 5 of them seem to be contributin
 
 1. Volatile acidity
 2. Sulphates 
-3. Alcohol
-4. Citric acid
+3. Citric acid
+4. Alcohol
 5. Density
 
 ### How did the feature(s) of interest vary with other features in the dataset?
@@ -586,8 +590,8 @@ If we sort these features of interest and our additional variable which was dens
 
 1. Volatile acidity - Negative. Lower volatile acidity, higher quality
 2. Sulphates - Positive. Higher sulphates, higher quality
-3. Alcohol - Positive. Higher alcohol level, higher quality
-4. Citric acid - Positive. Higher citric acid, higher quality. [Negative correlation with Volatile acidity]
+3. Citric acid - Positive. Higher citric acid, higher quality. [Negative correlation with Volatile acidity]
+4. Alcohol - Positive. Higher alcohol level, higher quality
 5. Density - Negative. Lower density, higher quality. [Negative correlation with Alcohol]
 
 
@@ -624,55 +628,40 @@ ggplot(aes(x = volatile.acidity, y = sulphates , color = quality_cat, fill = qua
 
 ```
 
-Surprisingly, the sulphates and the volatile acidity seem to form clusters of the red wine quality levels. This might be something very insightful to determine the quality of a red wine and these two variables might be what we are interested the most.
+Let's divide this plot in plots per quality category
 
-Let's analyze these two variables and compare them against the alcohol variable, which from level 5 quality showed a trend that higher alcohol, the higher the quality.
-
-```{r echo=FALSE, Multivariate_Plots_Alcohol_VolatileAcidity_Quality}
-# plot of alcohol and volatile acidity
-ggplot(aes(x = alcohol, y = volatile.acidity, color = quality_cat, fill = quality_cat), data = red) +
-  geom_hex(size=2) +
-  scale_fill_brewer(type='seq') +
-  scale_color_brewer(type = 'div') +
-  theme(panel.background = element_rect(fill='gray'))
-```
-
-In the plot, it seems that the lower the volatile acidity and the lower the alcohol the quality is good. However, the higher the alcohol gets the volatile acidity can also increase and the quality remains good.
-
-```{r echo=FALSE, Multivariate_Plots_Alcohol_Sulphates_Quality}
-# Plot of strongest variable alcohol and the third strongest sulphates
-ggplot(aes(x = alcohol, y = sulphates, color = quality_cat, fill = quality_cat), data = red) +
-  geom_hex(alpha=0.85, size = 8) +
-  scale_fill_brewer( palette = 'Purples') +
-  scale_colour_brewer(palette = 'Purples') +
-  theme(panel.background = element_rect(fill='darkgray'))
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_Sulphates_Quality_FacetWrap}
+# Plot of volatile acidity and sulphates with facet wrap of quality
+ggplot(aes(x = volatile.acidity, y = sulphates , color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.9, size = 2) +
+  scale_fill_brewer( type = 'div') +
+  scale_colour_brewer( type = 'seq') +
+  theme(panel.background = element_rect(fill='darkgray')) +
+  facet_wrap(~ quality_cat)
 
 ```
 
-This plot shows that the higher quality wines are in a specific range of sulphates and alcohol values. We can do some counting to find these ranges.
+We can see from the plots that there are some areas where the quality levels get clustered. Let's check the volatile acidity and sulphates counts of wines per quality.
 
-```{r echo=FALSE, Multivariate_Plots_Alcohol_Quality_Table}
-# Quality per Alcohol levels
-by(red$quality_cat, round(red$alcohol), table)
+Starting with volatile acidity
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_Quality_Table}
+# Quality per volatile acidity levels
+by(red$quality_cat, round(red$volatile.acidity,1), table)
 ```
+
+Then, we do sulphates counts
 
 ```{r echo=FALSE, Multivariate_Plots_Sulphates_Quality_Table}
-# Quality per Sulphates levels
+# Quality per sulphates levels
 by(red$quality_cat, round(red$sulphates,1), table)
 ```
 
-From the plot and statistics, we can see that it is more common to have good wines after 10 % volume alcohol(except on 15% vol) and the higher the alcohol level, more chances of a grade 8 wine. Also, it seems grade 8 wines mainly appear when sulphates are in the range of 0.6 and 0.9.
+Surprisingly, the sulphates and the volatile acidity form clusters of the red wine quality levels. The sulphates range [0.6,0.9] and the volatile acidity range [0.3,0.6] contain the higher number of high quality wines. This might be something very insightful to determine the quality of a red wine and these two variables might be what we are interested the most.
 
-```{r echo=FALSE, Multivariate_Plots_Alcohol_Density_Quality}
-# plot of variables alcohol and density
-ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), data = red) +
-  geom_hex(alpha=0.7, size=2) +
-  scale_fill_brewer(palette ='Reds') +
-  scale_color_brewer(palette ='Purples') +
-  theme(panel.background = element_rect(fill='gray'))
-```
+Let's analyze these two variables (volatile acidity and sulphates) and compare each of them against the citric acid variable, which from level 5 quality showed a trend that higher the citric acid, the higher the quality.
 
-
+We will start with the sulphates and the citric acid plot
 
 ```{r echo=FALSE, Multivariate_Plots_Sulphates_CitricAcid_Quality}
 # plot of variables sulphates and citric acid
@@ -685,6 +674,8 @@ ggplot(aes(x = sulphates, y = citric.acid, color = quality_cat, fill = quality_c
 
 Surprinsingly, the citric acid and sulphates do not cluster the quality levels like the volatile acidity and sulphates did. Despite citric acid being negatively correlated to volatile acidity.
 
+Let's continue the analysis comparing volatile acidity and citric acid. 
+
 ```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_CitricAcid_Quality}
 # plot of variables volatile acidity and citric acid
 ggplot(aes(x = volatile.acidity, y = citric.acid, color = quality_cat, fill = quality_cat), data = red) +
@@ -693,6 +684,83 @@ ggplot(aes(x = volatile.acidity, y = citric.acid, color = quality_cat, fill = qu
   scale_color_brewer(type='div') +
   theme(panel.background = element_rect(fill='gray'))
 ```
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_CitricAcid_Correlation}
+# correlation of volatile acidity and citric acid
+cor(red$volatile.acidity, red$citric.acid)
+```
+
+After comparing the volatile acidity and the citric acid we can see a slight negative correlation betwen these two variables. However, the 8 level quality values are very sparse. The level 7 seem to be clustered in two blobs, but it is pretty simialr to what we saw in the citric acid and sulphates plot. Thus, we might have citric acid influecing a little, but not a major factor. Also, we have volatile acidity which is slightly correlated to citric acid, so if we were to build a model we rather take volatile acidity and sulphates as of now.
+
+
+Once we have checked the first three variables we saw show clearer trends related to quality, we cna move to analyze our last two variables: alcohol and density. 
+Let's move forward in the analysis using the alcohol variable and compare it against out two main variables.
+
+As a reminder, the alcohol showed a trend in which higher alcohol, the higher the quality.
+
+Let's start comparing alcohol and volatile acidity.
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_VolatileAcidity_Quality}
+# plot of alcohol and volatile acidity
+ggplot(aes(x = alcohol, y = volatile.acidity, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(size=2) +
+  scale_fill_brewer(type='seq') +
+  scale_color_brewer(type = 'seq') +
+  theme(panel.background = element_rect(fill='darkgray')) +
+  facet_wrap(~quality_cat)
+```
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_VolatileAcidity_Quality_Table}
+# Quality per alcohol levels
+by(red$quality_cat, round(red$alcohol), table)
+```
+
+In the plot, it seems that the lower the volatile acidity and the lower the alcohol the quality tends to be good. However, the higher the alcohol gets, it allows the volatile acidity to go higher and still get some good quality wines.
+
+The alcohol range for which we get higher qualities goes from 10 to 14 % volume. While the volatile acidity as we saw in previous plots goes from 0.3 to 0.6 g/dm^3.
+
+Once we compared the alcohol to the volatile acidity, let's move to compare to the sulphates
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Sulphates_Quality}
+# Plot of strongest variable alcohol and the third strongest sulphates
+ggplot(aes(x = alcohol, y = sulphates, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.85, size = 8) +
+  scale_fill_brewer( palette = 'Purples') +
+  scale_colour_brewer(palette = 'Purples') +
+  theme(panel.background = element_rect(fill='darkgray'))
+
+```
+
+This plot shows that the higher quality wines are in a specific range of sulphates and alcohol values. We can do some counting of wines per quality according to alcohol and sulphates to find the ranges where best quality wines live.
+
+Starting with the alcohol and quality counts:
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Quality_Table}
+# Quality per Alcohol levels
+by(red$quality_cat, round(red$alcohol), table)
+```
+
+Then, we move to sulphates and quality counts:
+
+```{r echo=FALSE, Multivariate_Plots_Sulphates_Quality_Table}
+# Quality per Sulphates levels
+by(red$quality_cat, round(red$sulphates,1), table)
+```
+
+From the plot and statistics, we can see that it is more common to have good wines after 10 % volume alcohol(except on 15% vol) and the higher the alcohol level, more chances of a grade 8 wine. Also, it seems grade 8 wines mainly appear when sulphates are in the range of 0.6 and 0.9.
+
+
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Density_Quality}
+# plot of variables alcohol and density
+ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.7, size=2) +
+  scale_fill_brewer(palette ='Reds') +
+  scale_color_brewer(palette ='Purples') +
+  theme(panel.background = element_rect(fill='gray'))
+```
+
+
 
 ```{r echo=FALSE, Multivariate_Plots_Alcohol_CitricAcid_Quality}
 # plot of variables volatile acidity and citric acid
