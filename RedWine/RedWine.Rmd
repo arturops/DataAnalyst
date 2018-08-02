@@ -1,19 +1,16 @@
 ---
-title: "RedWine"
-author: "Arturo Parrales Salinas"
-date: "7/26/2018"
+title: "Red Wine Quality Analysis"
+author: "by Arturo Parrales Salinas"
+date: "8/2/2018"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
-# Red Wine Quality Analysis by *Arturo Parrales Salinas*
 ========================================================
 
-## Main Research Goal
+### Main Research Goal
 
 The variable that interest us the most is **quality** since we want to understand **which chemical properties influence the quality of red wines**.
 
@@ -34,8 +31,8 @@ a margin line to help you keep track of this guideline!
 # The other parameters for "message" and "warning" should also be set to FALSE
 # for other code chunks once you have verified that each plot comes out as you
 # want it to. This will clean up the flow of your report.
-install.packages('corrplot')
-install.packages('psych')
+#install.packages('corrplot')
+#install.packages('psych')
 
 
 library(corrplot)
@@ -48,7 +45,7 @@ library(psych)
 
 We load the data set of red wines quality. This dataset is tidy and contains 1,599 red wines records with 12 variables on the chemical properties of the wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent).
 
-The 11 variables of the wine are listed below:
+The 12 variables of the wine are listed below:
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
@@ -71,20 +68,24 @@ Once we removed X, we can continue to understand the variables on the dataset.
 
    For more information, read [Cortez et al., 2009].
 
-   Input variables (based on physicochemical tests):
-   1 - fixed acidity (tartaric acid - g / dm^3)
-   2 - volatile acidity (acetic acid - g / dm^3)
-   3 - citric acid (g / dm^3)
-   4 - residual sugar (g / dm^3)
-   5 - chlorides (sodium chloride - g / dm^3
-   6 - free sulfur dioxide (mg / dm^3)
-   7 - total sulfur dioxide (mg / dm^3)
-   8 - density (g / cm^3)
-   9 - pH
-   10 - sulphates (potassium sulphate - g / dm3)
-   11 - alcohol (% by volume)
-   Output variable (based on sensory data): 
-   12 - quality (score between 0 and 10)
+   **Input variables** (based on physicochemical tests):
+   
+   1. fixed acidity (tartaric acid - g / dm^3)
+   2. volatile acidity (acetic acid - g / dm^3)
+   3. citric acid (g / dm^3)
+   4. residual sugar (g / dm^3)
+   5. chlorides (sodium chloride - g / dm^3
+   6. free sulfur dioxide (mg / dm^3)
+   7. total sulfur dioxide (mg / dm^3)
+   8. density (g / cm^3)
+   9. pH
+   10. sulphates (potassium sulphate - g / dm3)
+   11. alcohol (% by volume)
+   
+   
+   **Output variable** (based on sensory data): 
+   
+   12. quality (score between 0 and 10)
 
    > **Note:** All Missing Attribute Values are set as None
 
@@ -153,24 +154,24 @@ summary(red$density)
 ```
 
 
-```{r echo=FALSE, Univariate_Plots_Density_Hist}
+```{r echo=FALSE, warning=FALSE, Univariate_Plots_Density_Hist}
 # Histogram of quality
 ggplot(aes(x = density), data = red) +
-  geom_histogram()
+  geom_histogram(bins=30)
 ```
 
 Just as expected the density is mainly between 0.995 and 1 g/cm^3, which seems an indication of all wines having similar density.
 
 Once we explored quality and density it might be good to look at the other variables.
 
-```{r echo=FALSE, Univariate_Plots_All_Hist}
+```{r echo=FALSE, warning=FALSE, Univariate_Plots_All_Hist}
 # Histograms of all the variables in the dataset that are numeric
 red[,-1] %>%
   keep(is.numeric) %>% 
   gather() %>% 
   ggplot(aes(value)) +
     facet_wrap(~ key, scales = "free") +
-    geom_histogram()
+    geom_histogram(bins=30)
 ```
 
 From this plot, we can see that density is plot just as we did before. This can confirm our plot to be correct. 
@@ -184,7 +185,7 @@ ggplot(aes(x = fixed.acidity), data = red) +
 
 ```
 
-```{r echo=FALSE, Univariate_Plots_FixedAcidity}
+```{r echo=FALSE, Univariate_Plots_FixedAcidity_Summary}
 # Summary of the fixed acidity variable
 summary(red$fixed.acidity)
 ```
@@ -201,7 +202,7 @@ ggplot(aes(x = volatile.acidity), data = red) +
 
 ```
 
-```{r echo=FALSE, Univariate_Plots_VolatileAcidity}
+```{r echo=FALSE, Univariate_Plots_VolatileAcidity_Table}
 # Table of the volatile acidity variable
 table(round(red$volatile.acidity,1))
 ```
@@ -215,7 +216,7 @@ For the time being, we can continue to explore other variables such as **citric.
 ggplot(aes(x = citric.acid), data = red) +
   geom_histogram(binwidth=0.005)
 ```
-```{r echo=FALSE, Univariate_Plots_CitricAcid}
+```{r echo=FALSE, Univariate_Plots_CitricAcid_Table}
 # Table of the citric acid variable
 table(round(red$citric.acid,2))
 ```
@@ -245,7 +246,7 @@ ggplot(aes(alcohol), data = red) +
 
 ```
 
-```{r echo=FALSE, Univariate_Plots_Alcohol}
+```{r echo=FALSE, Univariate_Plots_Alcohol_Summary}
 # Summary of the alcohol variable
 summary(red$alcohol)
 ```
@@ -253,14 +254,6 @@ summary(red$alcohol)
 This histogram seems to have a peak between 9.5 and 10.5, but a very low level between 8.4 and 9.5. Same happens the higher the alcohol level gets, the smaller the bin height gets. This can be an indication of alcohol associated to the quality as the low and high quality wines are few. 
 
 > **Note:** We will need to explore more, but it seems skewed distributions might be related to quality.
-
-```{r echo=FALSE, Univariate_Plots_All_Box_Plots}
-# box plots of all variables in the dataset
-ggplot(aes(x = ind, y = (values)^(1/200)), data = stack(red[,-1]) ) +
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90))
-
-```
 
 
 # Univariate Analysis
@@ -307,11 +300,13 @@ of the data? If so, why did you do this?
 
 In the histograms, we found:
 
-* Normal or very close to normal distributions:
+**Normal or very close to normal distributions**
+
   * pH
   * Density
 
-* Left tailed distributions:
+**Left tailed distributions**
+
   * Total Sulfur Dioxide
   * Alcohol
   * Fixed Acidity
@@ -321,7 +316,8 @@ In the histograms, we found:
   * Sulphates
   * Residual sugar
   
-* Bimodal or not normal distributions:
+**Bimodal or not normal distributions**
+
   * Citric Acid
   
 It seems that the not normal distributions might be more related to the quality since we have a higher number of quality 5 and 6 wines. This can mean that the tails can explain the lowest and highest quality wines on the dataset.
@@ -397,7 +393,7 @@ ggplot(aes(x = quality, y = density), data = red) +
 
 We can see that there seems no correlation between density and quality. However, because it seems symetric, I applied some math to the density and plot it again
 
-```{r echo=FALSE, Univariate_Plots_abs(log(density))_vs_Quality}
+```{r echo=FALSE, Bivariate_Plots_abs_log_density_vs_Quality}
 # scatter plot of density versus quality
 ggplot(aes(x = quality, y = abs(log(density))), data = red) +
   geom_jitter(alpha = 1/2)
@@ -597,24 +593,8 @@ If we sort these features of interest and our additional variable which was dens
 
 However, we can notice that the last two variables citric acid and density are correlated to volatile acidity and alcohol, respectively. This might mean we need to drop these two variables. In any situation, these two variables were left only for curiosity and exploration.
 
-ORDER
-+alcohol [DONE], 
--volatile.acidity, 
-+sulphates, 
-+citric.acid,
--total.sulfur.dioxide,
--density[DONE]
-
-
 
 # Multivariate Plots Section
-
-> **Tip**: Now it's time to put everything together. Based on what you found in
-the bivariate plots section, create a few multivariate plots to investigate
-more complex interactions between variables. Make sure that the plots that you
-create here are justified by the plots you explored in the previous section. If
-you plan on creating any mathematical models, this is the section where you
-will do that.
 
 We start plotting the variables that showed a trend in relation to quality.
 
@@ -742,7 +722,7 @@ by(red$quality_cat, round(red$alcohol), table)
 
 Then, we move to sulphates and quality counts:
 
-```{r echo=FALSE, Multivariate_Plots_Sulphates_Quality_Table}
+```{r echo=FALSE, Multivariate_Plots_Sulphates_Quality_Table2}
 # Quality per Sulphates levels
 by(red$quality_cat, round(red$sulphates,1), table)
 ```
@@ -750,17 +730,7 @@ by(red$quality_cat, round(red$sulphates,1), table)
 From the plot and statistics, we can see that it is more common to have good wines after 10 % volume alcohol(except on 15% vol) and the higher the alcohol level, more chances of a grade 8 wine. Also, it seems grade 8 wines mainly appear when sulphates are in the range of 0.6 and 0.9.
 
 
-
-```{r echo=FALSE, Multivariate_Plots_Alcohol_Density_Quality}
-# plot of variables alcohol and density
-ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), data = red) +
-  geom_hex(alpha=0.7, size=2) +
-  scale_fill_brewer(palette ='Reds') +
-  scale_color_brewer(palette ='Purples') +
-  theme(panel.background = element_rect(fill='gray'))
-```
-
-
+Once we have compared the alcohol with sulphates and found not a very strong pattern, we can plot alcohol versus citric acid.
 
 ```{r echo=FALSE, Multivariate_Plots_Alcohol_CitricAcid_Quality}
 # plot of variables volatile acidity and citric acid
@@ -771,20 +741,32 @@ ggplot(aes(x = alcohol, y = citric.acid, color = quality_cat, fill = quality_cat
   theme(panel.background = element_rect(fill='gray'))
 ```
 
-```{r echo=FALSE, Multivariate_Plots}
+The higher level quality wines are very sparse, so these variables together might not be good indicator of quality.
 
+Finally, let's explore the alcohol and density since they show a correlation in our correlation matrix.
+
+```{r echo=FALSE, Multivariate_Plots_Alcohol_Density_Quality}
+# plot of variables alcohol and density
+ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.7, size=2) +
+  scale_fill_brewer(palette ='Purples') +
+  scale_color_brewer(palette ='Purples') +
+  theme(panel.background = element_rect(fill='darkgray'))
 ```
+
+Despite alcohol and density are slightly correlated, they together do not explain the high quality wines.
+
 
 # Multivariate Analysis
 
-### Talk about some of the relationships you observed in this part of the \
-investigation. Were there features that strengthened each other in terms of \
+### Were there features that strengthened each other in terms of \
 looking at your feature(s) of interest?
+
+It was surprising to find that sulphates in the range of 0.6 to 0.9 g/dm^3 and volatile acidity range of 0.6 and 0.9 g/dm^3 contain the highest quality wines. It was also interesting to find that these two chemical properties are making clusters of the quality levels. This all makes sense since quality is a category and we are facing a classification probelm.
+
 
 ### Were there any interesting or surprising interactions between features?
 
-### OPTIONAL: Did you create any models with your dataset? Discuss the \
-strengths and limitations of your model.
 
 ------
 
@@ -845,27 +827,3 @@ future work that could be done with the dataset.
 > **Tip**: Don't forget to remove this, and the other **Tip** sections before
 saving your final work and knitting the final report!
 
-
-
-
----
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
