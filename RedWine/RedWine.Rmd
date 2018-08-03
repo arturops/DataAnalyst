@@ -24,8 +24,8 @@ The variable that interest us the most is **quality** since we want to understan
 # The other parameters for "message" and "warning" should also be set to FALSE
 # for other code chunks once you have verified that each plot comes out as you
 # want it to. This will clean up the flow of your report.
-#install.packages('corrplot')
-#install.packages('psych')
+install.packages('corrplot')
+install.packages('psych')
 
 
 library(corrplot)
@@ -121,7 +121,7 @@ In the previous sections, we have an overview of the dataset and here we can sta
 summary(red)
 ```
 
-Let's start looking at the **quality** summary, we can notice that the lowest quality of red wines was 3 and the maximum was 8. This tell us there are neither very bad quality wines nor very excellent wines in this dataset.
+Let's start looking at the **quality** summary, we can notice that the lowest quality of red wines was 3 and the maximum was 8. This tell us there are neither very bad quality wines nor very excellent wines in this dataset. Also, we want to make sure our **quality** variable is actually categorical (we need as a Factor in R).
 
 ```{r echo=FALSE, Univariate_Plots_Factor_Quality}
 # making quality a factor
@@ -130,6 +130,7 @@ str(red$quality_cat)
 table(red$quality_cat)
 ```
 
+We are sure the **quality** variable is categorical and we can continue exploring it more in detail.
 
 ```{r echo=FALSE, Univariate_Plots_Quality_Bar}
 # bar plot of quality
@@ -918,4 +919,8 @@ As far as future work with the findings, the best next step will be to create a 
 # Limitations
 
 The limitations in these analysis are related to data unbalance and a possible bias problem toward the quality 5 and 6 red wines. In here also, we explored one of the relations that seemed strong to explain quality; however, there are many possibilities as this is an open ended problem that someone else can find different relations that can be close to explain quality of a red wine. Another limitation is that the dataset contained 12 variables that are related to a wine, but there might be more such as time that a wine was left to get to point, the type of grapes used, the region form where the wine is, etc. More variables can contribute to determine the quality and we might be looking at only a small set of them. All in all, be aware that this analysis helps understand quality form the current dataset, but not for every type of wine you can find out there in the world.
+
+## Resources
+
+While creating this project there were no special resources used, but the [documentation of R ggplot](https://ggplot2.tidyverse.org/index.html).
 
