@@ -40,6 +40,7 @@ If you want to brush up basic SQL queries, check the **SQL Appendix**
 3. **[European Soccer](./SoccerTeamsAnalysis/European_Soccer.ipynb)**
 4. [AB Test for a Web Page Release](./ABTest/AB_test.ipynb)
 5. **[Stroop Effect](./StroopEffect/Stroop_Effect_Perceptual_Phenomenon.ipynb)**
+6. [Red Wine Quality Analysis](./RedWine/RedWine.Rmd)
 
 ## Appendix
 
