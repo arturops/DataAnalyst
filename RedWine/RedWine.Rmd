@@ -5,19 +5,12 @@ date: "8/2/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-========================================================
+***
+***
 
 ### Main Research Goal
 
 The variable that interest us the most is **quality** since we want to understand **which chemical properties influence the quality of red wines**.
-
-> **Tip**: One of the requirements of this project is that your code follows
-good formatting techniques, including limiting your lines to 80 characters or
-less. If you're using RStudio, go into Preferences \> Code \> Display to set up
-a margin line to help you keep track of this guideline!
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using in your analysis in this code
@@ -39,8 +32,8 @@ library(corrplot)
 library(purrr)
 library(tidyr)
 library(ggplot2)
-#library('GGally')
 library(psych)
+library(gridExtra)
 ```
 
 We load the data set of red wines quality. This dataset is tidy and contains 1,599 red wines records with 12 variables on the chemical properties of the wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent).
@@ -70,52 +63,54 @@ Once we removed X, we can continue to understand the variables on the dataset.
 
    **Input variables** (based on physicochemical tests):
    
-   1. fixed acidity (tartaric acid - g / dm^3)
-   2. volatile acidity (acetic acid - g / dm^3)
-   3. citric acid (g / dm^3)
-   4. residual sugar (g / dm^3)
-   5. chlorides (sodium chloride - g / dm^3
-   6. free sulfur dioxide (mg / dm^3)
-   7. total sulfur dioxide (mg / dm^3)
-   8. density (g / cm^3)
-   9. pH
-   10. sulphates (potassium sulphate - g / dm3)
-   11. alcohol (% by volume)
+   1. **Fixed acidity** (tartaric acid - $g / dm^3$)
+   2. **Volatile acidity** (acetic acid - $g / dm^3$)
+   3. **Citric acid** ($g / dm^3$)
+   4. **Residual sugar** ($g / dm^3$)
+   5. **Chlorides** (sodium chloride - $g / dm^3$)
+   6. **Free sulfur dioxide** ($mg / dm^3$)
+   7. **Total sulfur dioxide** ($mg / dm^3$)
+   8. **Density** ($g / cm^3$)
+   9. **pH**
+   10. **Sulphates** (potassium sulphate - $g / dm3$)
+   11. **Alcohol** (% by volume)
    
    
    **Output variable** (based on sensory data): 
    
-   12. quality (score between 0 and 10)
+   12. **Quality** (score between 0 and 10)
 
-   > **Note:** All Missing Attribute Values are set as None
+  >  <font size="2">Note: All Missing Attribute Values are set as None.</font>
 
 ### Description of Attributes
 
-   1 - fixed acidity: most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
+   1. **Fixed acidity:** most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
 
-   2 - volatile acidity: the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
+   2. **Volatile acidity:** the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
 
-   3 - citric acid: found in small quantities, citric acid can add 'freshness' and flavor to wines
+   3. **Citric acid:** found in small quantities, citric acid can add 'freshness' and flavor to wines
 
-   4 - residual sugar: the amount of sugar remaining after fermentation stops, it's rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+   4. **Residual sugar:** the amount of sugar remaining after fermentation stops, it's rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
 
-   5 - chlorides: the amount of salt in the wine
+   5. **Chlorides:** the amount of salt in the wine
 
-   6 - free sulfur dioxide: the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
+   6. **Free sulfur dioxide:** the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
 
-   7 - total sulfur dioxide: amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
+   7. **Total sulfur dioxide:** amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
 
-   8 - density: the density of water is close to that of water depending on the percent alcohol and sugar content
+   8. **Density:** the density of water is close to that of water depending on the percent alcohol and sugar content
 
-   9 - pH: describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
+   9. **pH:** describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
 
-   10 - sulphates: a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant
+   10. **Sulphates:** a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant
 
-   11 - alcohol: the percent alcohol content of the wine
+   11. **Alcohol:** the percent alcohol content of the wine
 
-   Output variable (based on sensory data): 
-   12 - quality (score between 0 and 10)
+   **Output variable** (based on sensory data): 
+   
+   12. **Quality:** the score of a red wine, between 0 (lowest) and 10 (highest)
 
+***
 
 # Univariate Plots Section
 
@@ -160,7 +155,7 @@ ggplot(aes(x = density), data = red) +
   geom_histogram(bins=30)
 ```
 
-Just as expected the density is mainly between 0.995 and 1 g/cm^3, which seems an indication of all wines having similar density.
+Just as expected the density is mainly between 0.995 and 1 $g/cm^3$, which seems an indication of all wines having similar density.
 
 Once we explored quality and density it might be good to look at the other variables.
 
@@ -190,7 +185,7 @@ ggplot(aes(x = fixed.acidity), data = red) +
 summary(red$fixed.acidity)
 ```
 
-The fixed acidity peaks in the range 7 to 9 g/dm^3. Since we know that the most frequent quality is 5 and 6, this might be an indication that fixed acidity levels 7 to 9 could be the quality range 5 to 6. Following the same intuition, we can think that the least frequent values in the histogram can be either higher or lower quality. In the next section, we will need to investigate this further using two variables.
+The fixed acidity peaks in the range 7 to 9 $g/dm^3$. Since we know that the most frequent quality is 5 and 6, this might be an indication that fixed acidity levels 7 to 9 could be the quality range 5 to 6. Following the same intuition, we can think that the least frequent values in the histogram can be either higher or lower quality. In the next section, we will need to investigate this further using two variables.
 
 
 Now, we can check the volatile acidity
@@ -253,8 +248,9 @@ summary(red$alcohol)
 
 This histogram seems to have a peak between 9.5 and 10.5, but a very low level between 8.4 and 9.5. Same happens the higher the alcohol level gets, the smaller the bin height gets. This can be an indication of alcohol associated to the quality as the low and high quality wines are few. 
 
-> **Note:** We will need to explore more, but it seems skewed distributions might be related to quality.
+  > <font size="2">Note: We will need to explore more, but it seems skewed distributions might be related to quality.</font>
 
+***
 
 # Univariate Analysis
 
@@ -324,6 +320,7 @@ It seems that the not normal distributions might be more related to the quality 
 
 Luckily this dataset was made from tidy data and the only variable that needed a type change was quality. This was to make it a factor and have it as a true categorical variable rather than numerical.
 
+***
 
 # Bivariate Plots Section
 
@@ -334,7 +331,6 @@ The first thing to start our bivariate analysis will be to check which variables
 ```{r echo=FALSE, Bivariate_Plots_Corr_Coef}
 # Correlation Matrix
 cols = length(red)
-cols
 mcor <- cor(red[,2:cols-2])
 round(mcor, 2)
 
@@ -361,7 +357,7 @@ Total sulfur dioxide and free sulfur dioxide seem correlated, but not with anyth
 
 We have already decided to keep citric acid, so we can keep **alcohol** despite it is a bit correlated, this is mainly to test if alcohol level actually impacts a wine quality.
 
-> **Note:** Wine is alcohol, so my curiousity drives me to understand if the alcohol level matters.
+  > <font size="2">Note: Wine is alcohol, so my curiousity drives me to understand if the alcohol level matters.</font>
 
 Finally, from our promising features, we have the **residual sugar** which seems not correlated to anything. it also had a slightly left tailed distribution, so it might be worthy to check how it affects quality or if it is neutral.
 
@@ -378,7 +374,7 @@ pairs.panels(red[,interest],bg=c("yellow","blue")[(red > 10)+1],pch=21,
 
 From the plot, we can see that alcohol and density seem to show the expected slight correlation we had before. Same applies to volatile acidity and citric acid. Besides those variables everything else seems to have almost no correlation which can be a good indicator to understand the independent variable that relate to quality.
 
-> **Note:** Density is actually a variable with most of the slight correlations in the plot, so if we find density to be not very important, we can remove it. it also has a normal distribution which can be a reason of it correlating slightly with other variables.
+  > <font size="2">Note: Density is actually a variable with most of the slight correlations in the plot, so if we find density to be not very important, we can remove it. it also has a normal distribution which can be a reason of it correlating slightly with other variables.</font>
 
 We can explore further relations between quality and variables. let's start from **density** since we noticed most wines have similar densities.
 
@@ -399,7 +395,7 @@ ggplot(aes(x = quality, y = abs(log(density))), data = red) +
   geom_jitter(alpha = 1/2)
 ```
 
-After applying a log to the density and then obtaining the absolute value of that operation, we can confirm that wines with a higher quality seems to have a few high/low density outliers, while low quality wines have no high/low density outliers. However, most wines have a desnity in between 0.995 and 1.0 g/cm^3. This does feature seems to be slighly contributing to the quality.
+After applying a log to the density and then obtaining the absolute value of that operation, we can confirm that wines with a higher quality seems to have a few high/low density outliers, while low quality wines have no high/low density outliers. However, most wines have a desnity in between 0.995 and 1.0 $g/cm^3$. This does feature seems to be slighly contributing to the quality.
 
 ```{r echo=FALSE, Bivariate_Plots_Density_Quality_Boxplot}
 # Boxplot of Quality and Alcohol
@@ -541,6 +537,7 @@ Apparently the residual sugar of a wine does not define the quality of a wine si
 
 Once we have analyzed our desired variables, we can make some conclusions out of the plots.
 
+***
 
 # Bivariate Analysis
 
@@ -558,7 +555,7 @@ In this bivariate analysis we found the correlation matrix between our variables
 
 From the correlation matrix, we reduce the number of promising features to explore based on the variables' correlation. 
 
-> **Note:** pH was correlated to almost all our variables. 
+  > <font size="2">Note: pH was correlated to almost all our variables.</font>
 
 Soemthing we mentioned before is that the features of interest had a left tailed distribution or completely random. This was also seen in the boxplots of each feature vs quality. Moreover, with the correlation matrix we narrow the features of interest even further.
 
@@ -593,6 +590,7 @@ If we sort these features of interest and our additional variable which was dens
 
 However, we can notice that the last two variables citric acid and density are correlated to volatile acidity and alcohol, respectively. This might mean we need to drop these two variables. In any situation, these two variables were left only for curiosity and exploration.
 
+***
 
 # Multivariate Plots Section
 
@@ -645,7 +643,8 @@ We will start with the sulphates and the citric acid plot
 
 ```{r echo=FALSE, Multivariate_Plots_Sulphates_CitricAcid_Quality}
 # plot of variables sulphates and citric acid
-ggplot(aes(x = sulphates, y = citric.acid, color = quality_cat, fill = quality_cat), data = red) +
+ggplot(aes(x = sulphates, y = citric.acid, 
+           color = quality_cat, fill = quality_cat), data = red) +
   geom_hex(size=2) +
   scale_fill_brewer(palette = 'Greens') +
   scale_color_brewer(type='div') +
@@ -667,7 +666,7 @@ ggplot(aes(x = volatile.acidity, y = citric.acid, color = quality_cat, fill = qu
 
 ```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_CitricAcid_Correlation}
 # correlation of volatile acidity and citric acid
-cor(red$volatile.acidity, red$citric.acid)
+cor(red$volatile.acidity, red$citric.acid, method = "spearman")
 ```
 
 After comparing the volatile acidity and the citric acid we can see a slight negative correlation betwen these two variables. However, the 8 level quality values are very sparse. The level 7 seem to be clustered in two blobs, but it is pretty simialr to what we saw in the citric acid and sulphates plot. Thus, we might have citric acid influecing a little, but not a major factor. Also, we have volatile acidity which is slightly correlated to citric acid, so if we were to build a model we rather take volatile acidity and sulphates as of now.
@@ -697,7 +696,7 @@ by(red$quality_cat, round(red$alcohol), table)
 
 In the plot, it seems that the lower the volatile acidity and the lower the alcohol the quality tends to be good. However, the higher the alcohol gets, it allows the volatile acidity to go higher and still get some good quality wines.
 
-The alcohol range for which we get higher qualities goes from 10 to 14 % volume. While the volatile acidity as we saw in previous plots goes from 0.3 to 0.6 g/dm^3.
+The alcohol range for which we get higher qualities goes from 10 to 14 % volume. While the volatile acidity as we saw in previous plots goes from 0.3 to 0.6 $g/dm^3$.
 
 Once we compared the alcohol to the volatile acidity, let's move to compare to the sulphates
 
@@ -756,74 +755,167 @@ ggplot(aes(x = alcohol, y = density, color = quality_cat, fill = quality_cat), d
 
 Despite alcohol and density are slightly correlated, they together do not explain the high quality wines.
 
+Before making conclusions about the multivariate analysis, it might be interesting to see if the volatile acidity per % volume of alcohol actually helps alcohol play part in this analysis.
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_per_Alcohol_vs_Sulphates_Quality}
+# Plot of volatile acidity and sulphates
+ggplot(aes(x = volatile.acidity/alcohol, y = sulphates , color = quality_cat, fill = quality_cat), data = red) +
+  geom_hex(alpha=0.7, size = 2) +
+  scale_fill_brewer( type = 'div') +
+  scale_colour_brewer( type = 'seq') +
+  theme(panel.background = element_rect(fill='darkgray'))
+
+```
+
+Surprisingly dividing the volatile acidity by the % volume of alcohol made the higher quality wines come closer and be clustered easier than without dividing the volatile acidity with alcohol.
+
+We can compare this plot against the first plot on this multivariate analysis if we use some numbers.
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_per_Alcohol_Quality_Table}
+# Quality per volatile acidity by alcohol levels
+by(red$quality_cat, round(red$volatile.acidity/red$alcohol,2), table)
+```
+
+From the table in here and what we learned on the table fo the first plot of the section, we can see that when we divided with alcohol the volatle acidity we definitively helped to make high quality wines come together. In fact, in the first plot of volatile acidity versus sulphates, our maximum number of wines of quality 8 was 8 and it happened when volatile acidity was 0.4 $g/dm^3$. On the other hand, when we plotted volatile acidity by alcohol versus sulphates, the maximum number of quality 8 wines was 12 and it was present when volatile acidity per % alcohol was 0.03 $g/dm^3$ per % vol of alcohol. This defiitively shows a better cluster for quality of wines.
+
+
+If we want to go a bit further we can try to measure correlation for `cor( volatile acidity, sulphates)` and `cor( volatile acidity per % volume of alcohol, sulphates)`. 
+
+  > <font size="2">Note: We only need numbers for the volatile acidity divided by alcohol since sulphates stayed the same.</font>
+
+```{r echo=FALSE, Multivariate_Plots_VolatileAcidity_per_Alcohol_Sulphates_Corr}
+# Quality per sulphates levels
+cor(red$volatile.acidity, red$sulphates,method = "spearman")
+cor(red$volatile.acidity/red$alcohol, red$sulphates, method= "spearman")
+```
+
+We can see the first correlation coefficient to be closer to 0 and that makes volatile acidity and sulphates less correlated than volatile acidity per alcohol and sulphates.
+
+I still see they are not so correlated, but this is more of a classification problem, so mutliple logistic regression would be a better candidate to build a model in the future.
+
+***
 
 # Multivariate Analysis
 
 ### Were there features that strengthened each other in terms of \
 looking at your feature(s) of interest?
 
-It was surprising to find that sulphates in the range of 0.6 to 0.9 g/dm^3 and volatile acidity range of 0.6 and 0.9 g/dm^3 contain the highest quality wines. It was also interesting to find that these two chemical properties are making clusters of the quality levels. This all makes sense since quality is a category and we are facing a classification probelm.
-
+It was surprising to find that sulphates in the range of 0.6 to 0.9 $g/dm^3$ and volatile acidity range of 0.6 and 0.9 $g/dm^3$ contain the highest quality wines. It was also interesting to find that these two chemical properties are making clusters of the quality levels. This all makes sense since quality is a category and we are facing a classification problem.
 
 ### Were there any interesting or surprising interactions between features?
 
+Finding that volatile acidity and sulphates are very promising to find the quality of a wine was surprising, but it was even more interesting to find that when we divided the volatile acidity by the alcohol and plot that versus the sulphates gave even a better relation of variables to find the chemicals that can be driving the quality of a wine.
 
-------
+In fact, the cluster of quality 8 wines was 50% greater when volatile acidity was divided by alcohol than by leaving it alone.
+
+This really exemplified the importance of combining features.
+
+***
 
 # Final Plots and Summary
-
-> **Tip**: You've done a lot of exploration and have built up an understanding
-of the structure of and relationships between the variables in your dataset.
-Here, you will select three plots from all of your previous exploration to
-present here as a summary of some of your most interesting findings. Make sure
-that you have refined your selected plots for good titling, axis labels (with
-units), and good aesthetic choices (e.g. color, transparency). After each plot,
-make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
 # bar plot of quality
-ggplot(aes(x = quality_cat, fill = quality_cat), data = red) +
+ggplot(aes(x = quality_cat, fill = quality_cat ), data = red) +
   geom_bar(stat = "count") +
   scale_fill_brewer(type='seq') +
-  theme(panel.background = element_rect(fill='black'), panel.grid = element_blank())
+  ggtitle("Quality of Wines") +
+  labs(x = "Quality Level", y = "Number of Wines",
+       caption = '\nNote: Wine quality goes from 0 (lowest) to 10 (highest)') +
+  theme(panel.background = element_rect(fill='black'), 
+        panel.grid = element_blank(),
+        legend.position = "None", 
+        plot.title = element_text(face = "bold", hjust = 0.5,size = 18),
+        axis.title.x = element_text(color = 'black'),
+        axis.title.y = element_text(color = 'black'),
+        plot.caption = element_text(hjust = 1, size = 9, color = 'darkgray'))
 ```
 
 ### Description One
+This was the first plot we made and it helped us to understand the amount of wines per quality category that we have in our dataset. Clearly, we can see that we have more quality 5 and 6 wines than any other category of wines. The fact that we know that allowed us to understand that it will be completely fine that chemical components will not show normal distributions. In other words, we will have many skewed distributions and these might be the ones we take a look at to find promising variables that explain the quality of a red wine.
 
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
 # Boxplot of Quality and Volatile Acidity
-ggplot(aes(y = volatile.acidity, x = quality_cat ), data = red) +
+p1 <- ggplot(aes(y = volatile.acidity, x = quality_cat ), data = red) +
   geom_boxplot(aes(fill = quality_cat)) +
-  scale_fill_brewer(type = 'seq')
+  scale_fill_brewer(type = 'seq') +
+  labs(title='Volatile Acidity by Quality',
+       x = '[Low]                     Quality                     [High]',
+       y = 'Volatile Acidity [g/dm^3]') +
+  theme(legend.position = "None", 
+        plot.title = element_text(face = "bold", hjust = 0.5,size = 15),
+        axis.title.x = element_text(color = 'black', size = 10),
+        axis.title.y = element_text(color = 'black', size = 10))
+
+# Boxplot of Quality and Sulphates
+p2 <- ggplot(aes(y = sulphates, x = quality_cat ), data = red) +
+  geom_boxplot(aes(fill = quality_cat)) +
+  scale_fill_brewer(type = 'seq') +
+  labs(title='Sulphates by Quality',
+       x = '[Low]                     Quality                     [High]',
+       y = 'Sulphates [g/dm^3]') +
+  theme(legend.position = "None", 
+        plot.title = element_text(face = "bold", hjust = 0.5,size = 15),
+        axis.title.x = element_text(color = 'black', size = 10),
+        axis.title.y = element_text(color = 'black', size = 10))
+
+# Putting together the plots in a single image
+grid.arrange(p1,p2,ncol=2)
+
 ```
 
 ### Description Two
+Once we analyzed variables distributions by quality, there were more details about chemical properties being more related to quality levels. The box plots allowed to discover two important checmical properties: Volatile acidity and sulphates.
+The box plots picture that volatile acidity $g/gm^3$ decrease the higher the quality a wine has. While the sulphates $g/dm^3$ increase in higher quality wines.
+The fact that we found these two variables helped understand that there are some checmical properties that can explain the quality of a red wine.
 
 
 ### Plot Three
 ```{r echo=FALSE, Plot_Three}
-# Plot of second strongest variable volatile acidity and the third strongest sulphates
-ggplot(aes(x = volatile.acidity, y = sulphates, color = quality_cat, fill = quality_cat), data = red) +
+# Plot of volatile acidity per alcohol and sulphates
+ggplot(aes(x = volatile.acidity/alcohol, y = sulphates , color = quality_cat, 
+           fill = quality_cat), data = red) +
   geom_hex(alpha=0.8, size = 2) +
+  coord_cartesian(ylim=c(0.3, 1.4), xlim=c(0.008,0.13)) +
   scale_fill_brewer( type = 'div') +
   scale_colour_brewer( type = 'seq') +
-  theme(panel.background = element_rect(fill='darkgray'))
+  labs(title = 'Quality of Wines Clustered by \nSulphates and Volatile Acidity per Alcohol % Vol', x = 'Volatile Acidity per % Alcohol [g/dm^3]' , y =  'Sulphates [g/dm^3]',
+  fill = 'Wine Quality', colour = 'Wine Quality',
+  caption = '\nNote: Wine quality goes from 0 (lowest) to 10 (highest)') +
+  theme(panel.background = element_rect(fill='darkgray'),
+        plot.title = element_text(hjust = 0.5, face = 'bold'),
+        legend.title = element_text(hjust = 0.5, size = 9, face = 'bold'),
+        legend.justification = "right",
+        plot.caption = element_text(hjust = 1, size = 9, color = 'darkgray'))
+
 ```
 
 ### Description Three
+This plot shows how the different levels of quality of a red wine overlap and at the same time it shows clusters of the levels of quality. This is very important when identifying the quality of a specific wine since this is a classification problem. 
+The fact that we see clusters using volatile acidity per alcohol and sulphates means that these chemical properties are good indicators of how a red wine quality. 
+We can also see some outliers in the data, but mainly we see groups of our quality levels. One can also appreciate quality 5 and 6 clusters spread all over the plot which confirms what we learned from our dataset at the very beggining.
+All in all, this plot can be very useful to see the different quality levels and in which ranges of $g/dm^3$ of volatile acidity per % alcohol and sulphates one can have higher quality wines.
 
-------
+***
 
 # Reflection
 
-> **Tip**: Here's the final step! Reflect on the exploration you performed and
-the insights you found. What were some of the struggles that you went through?
-What went well? What was surprising? Make sure you include an insight into
-future work that could be done with the dataset.
+In this project, I happened to learn a lot about red wine quality and the checmical properties that are measure to give a wine a quality grade. 
 
-> **Tip**: Don't forget to remove this, and the other **Tip** sections before
-saving your final work and knitting the final report!
+The hardest part of the analysis was to first start understanding the data and try to find something useful to start with and continue unveiling more and more in new analysis. 
+
+While plotting univariate distributions it was very hard to determine if a variable might be related to an important finding, but using the intuition was key and challenging. Later on, during bivariate analysis it was a bit easier to decide which variables to choose based on the box plots the trends seen with quality, but the possible plots to explore and relations to find were too many to even consider them all. At that point I just had the idea to explore correlated variables and start from simple to have a strong decision based on simple relations rather than very complicated ones. However, I felt I was approaching a dead end when a chemical property showed no relation to quality. It was challenging that things that made sense for me such as alcohol related to a wine quality were actually not really true when exploring the data. However, I was successful in finding the volatile acidity and the sulphates as important variables that seemed to follow a trend related to quality levels. From there things became a bit easier and I knew exactly what I wanted to do at the very beggining of multivariate analysis. In this final analysis, I started plotting the volatile acidity versus the sulphates and coloring them by quality to see if there were any visible signs of cluster of wine quality. In fact, there were clusters, a bit spread but decent enough to see them. I continue to a dead end in which no other chemical components showed to form a cluster or explain quality. That was when I decided that my first plot of volatile acidity and sulphates was the best I have gotten so far. Then, it was a day later that I still not believe that alcohol % volume was not related to quality since wine is alcohol. That lead me to divide volatile acidity over alcohol and I found something that blew my mind once I plotted such variables. The clusters I have found in the plot of volatile acidity versus the sulphates were now tighter. This finding was in fact a reward of the hard effort to figure out if other variables that logically seemed to be connected to the quality of a wine, specially alcohol, were actually connected.
+
+All in all, I had a great experience anayzing the data, struggling and figuring out a new way when things didn't look good in the path I was taking. Other times, I just had explore until I found something useful to move further with such finding. This project definitively taught me how to approach an EDA to find something interesting and also to trust intution once in a while.
+
+# Future Work
+
+As far as future work with the findings, the best next step will be to create a multi-classifier logistic regression model. I would also be tempted to get more data to get a more balanced dataset in all categories and also include quality levels 0, 1, 2, 9 and 10. This will definitively benefit the model we build and we might even have to do another quick exploration to determine our current chemical properties still explain red wines quality.
+
+# Limitations
+
+The limitations in these analysis are related to data unbalance and a possible bias problem toward the quality 5 and 6 red wines. In here also, we explored one of the relations that seemed strong to explain quality; however, there are many possibilities as this is an open ended problem that someone else can find different relations that can be close to explain quality of a red wine. Another limitation is that the dataset contained 12 variables that are related to a wine, but there might be more such as time that a wine was left to get to point, the type of grapes used, the region form where the wine is, etc. More variables can contribute to determine the quality and we might be looking at only a small set of them. All in all, be aware that this analysis helps understand quality form the current dataset, but not for every type of wine you can find out there in the world.
 
