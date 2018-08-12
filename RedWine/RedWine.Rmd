@@ -24,8 +24,8 @@ The variable that interest us the most is **quality** since we want to understan
 # The other parameters for "message" and "warning" should also be set to FALSE
 # for other code chunks once you have verified that each plot comes out as you
 # want it to. This will clean up the flow of your report.
-install.packages('corrplot')
-install.packages('psych')
+#install.packages('corrplot')
+#install.packages('psych')
 
 
 library(corrplot)
