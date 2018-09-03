@@ -34,6 +34,7 @@ After that command a tab in your browser will pop up with all the notebook on it
 Check the **European Soccer** notebook (uses a SQLite DB, Pandas, 2D and 3D plots)
 For hypothesis testing review the **Stroop Effect** notebook, it has a simple explanation on how to do Boostrapping and t-test one-tail
 Review the **Twitter Data Wrangling** to learn the data wrangling process.
+If you are interested in an example Tableau story/dashboard check the **Baseball Players Analysis** project and search for the link to the dahsboards on the Final Feedback section (end of page 5).
 If you want to brush up basic SQL queries, check the **SQL Appendix**
 
 1. [Temperature Trends per Year](./TemperatureTrends/Temperature_Trends.ipynb)
@@ -43,6 +44,7 @@ If you want to brush up basic SQL queries, check the **SQL Appendix**
 5. **[Stroop Effect](./StroopEffect/Stroop_Effect_Perceptual_Phenomenon.ipynb)**
 6. [Red Wine Quality Analysis](./RedWine/RedWine.Rmd)
 7. **[Twitter Data Wrangling](./TwitterDataWrangling/wrangle_act.ipynb)**
+8. **[Baseball Players Analysis](./BaseballPlayersAnalysis/BaseballPlayersCharacteristics.pdf)**
 
 ## Appendix
 
